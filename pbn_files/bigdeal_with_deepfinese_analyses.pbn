@@ -1,0 +1,112 @@
+% PBN 1.0
+[Generator "Big Deal version 1.1"]
+[Board "1"]
+[Dealer "N"]
+[Vulnerable "None"]
+[Deal "N:A873.AJ83.52.Q32 95.74.AQJ84.T754 QT62.KQ62.K93.K8 KJ4.T95.T76.AJ96"]
+[Ability "N:7AA55 E:53377 S:7AA56 W:53377"]
+[Minimax "4HS420"]
+
+
+[Board "2"]
+[Dealer "E"]
+[Vulnerable "NS"]
+[Deal "N:KJ65.KQJ7.J7.QJ8 AQT8.84.T985.AK6 432.T52.A3.T5432 97.A963.KQ642.97"]
+[Ability "N:34425 E:A98B7 S:34425 W:A98B7"]
+[Minimax "3NW-430"]
+
+
+[Board "3"]
+[Dealer "S"]
+[Vulnerable "EW"]
+[Deal "N:KJ65.6.A86.AJ542 Q8432.JT84.T2.KQ AT9.7.KJ9754.T98 7.AKQ9532.Q3.763"]
+[Ability "N:694BA E:24912 S:694BA W:24912"]
+[Minimax "5DS400"]
+
+
+[Board "4"]
+[Dealer "W"]
+[Vulnerable "All"]
+[Deal "N:Q7632.Q972.2.AT7 84.AKJT.K74.J652 KJT.863.Q985.Q98 A95.54.AJT63.K43"]
+[Ability "N:26324 E:A7AA9 S:26224 W:A7AA9"]
+[Minimax "3NE-630"]
+
+
+[Board "5"]
+[Dealer "N"]
+[Vulnerable "NS"]
+[Deal "N:.KQ97.AQ974.8753 T9742.4.T63.Q964 KJ63.AJ62.82.AJ2 AQ85.T853.KJ5.KT"]
+[Ability "N:85A99 E:48333 S:95AAA W:48333"]
+[Minimax "4SDE300"]
+
+
+[Board "6"]
+[Dealer "E"]
+[Vulnerable "EW"]
+[Deal "N:KQJ.AKJT94.82.92 A5.765.QJT4.JT86 96.832.A9653.AQ5 T87432.Q.K7.K743"]
+[Ability "N:95A85 E:37357 S:95A85 W:37357"]
+[Minimax "4HN420"]
+
+
+[Board "7"]
+[Dealer "S"]
+[Vulnerable "All"]
+[Deal "N:AKT64.AQT.6432.5 2.63.AKT5.AJ7432 Q983.KJ82.8.KQT9 J75.9754.QJ97.86"]
+[Ability "N:8B966 E:42467 S:8B966 W:42467"]
+[Minimax "4SN650"]
+
+
+[Board "8"]
+[Dealer "W"]
+[Vulnerable "None"]
+[Deal "N:J5.QT6.J53.A9532 K83.AJ942.T82.QJ 964.53.AKQ64.KT8 AQT72.K87.97.764"]
+[Ability "N:33399 E:39933 S:33399 W:39933"]
+[Minimax "4CDN-100"]
+
+
+[Board "9"]
+[Dealer "N"]
+[Vulnerable "EW"]
+[Deal "N:83.AQ5.AQ7.AK865 Q965.J82.JT8.T93 AT742.T973.543.2 KJ.K64.K962.QJ74"]
+[Ability "N:8AA98 E:53345 S:8AA98 W:53345"]
+[Minimax "4HS420"]
+
+
+[Board "10"]
+[Dealer "E"]
+[Vulnerable "All"]
+[Deal "N:62.KT.QJ72.AQ432 K75.A432.A64.865 T843.65.KT85.JT7 AQJ9.QJ987.93.K9"]
+[Ability "N:33388 E:8AA55 S:33388 W:AAA55"]
+[Minimax "4NW-630"]
+
+
+[Board "11"]
+[Dealer "S"]
+[Vulnerable "None"]
+[Deal "N:963.AKT8.Q8.Q982 J5.765.T32.AKT74 Q42.943.KJ4.J653 AKT87.QJ2.A9765."]
+[Ability "N:43535 E:78796 S:55636 W:88797"]
+[Minimax "1NW-120"]
+
+
+[Board "12"]
+[Dealer "W"]
+[Vulnerable "NS"]
+[Deal "N:QJ9832.A954.4.T8 7.KQJ2.K963.AKQ3 T5.T87.AQ5.J9742 AK64.63.JT872.65"]
+[Ability "N:37435 E:969A7 S:37435 W:969A7"]
+[Minimax "3NE-400"]
+
+
+[Board "13"]
+[Dealer "N"]
+[Vulnerable "All"]
+[Deal "N:.9754.A43.Q98732 Q987.J6.KJT6.AJ5 KT643.32.875.KT4 AJ52.AKQT8.Q92.6"]
+[Ability "N:13116 E:AABB7 S:13116 W:AACB7"]
+[Minimax "6HW-1430"]
+
+
+[Board "14"]
+[Dealer "E"]
+[Vulnerable "None"]
+[Deal "N:A9.AQ63.AQJ72.96 743.K85.KT43.875 QJT.4.985.QJT432 K8652.JT972.6.AK"]
+[Ability "N:6659A E:67843 S:6559A W:67843"]
+[Minimax "4CS130"]
