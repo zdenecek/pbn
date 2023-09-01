@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using pbn.model;
 using pbn.tokens.tags;
 
 
@@ -13,7 +14,7 @@ namespace pbn.tokens
         private Dictionary<string, TagFactoryMethod> stringFactories = new();
         private TagFactoryMethod defaultFactory = (name, content) => new Tag(name, content);
 
-        public TagFactory registerTagFactoryMethod(string tagName, TagFactoryMethod factory)
+        public TagFactory RegisterTagFactoryMethod(string tagName, TagFactoryMethod factory)
         {
             if (stringFactories.ContainsKey(tagName)) throw new InvalidOperationException($"factory for {tagName} was already set");
 
@@ -27,21 +28,21 @@ namespace pbn.tokens
             var factory = new TagFactory();
 
 
-            factory.registerTagFactoryMethod(Tags.Event,  (tagName, tagContent) => new EventTag(tagContent))
-            .registerTagFactoryMethod(Tags.Site,  (tagName, tagContent) => new SiteTag(tagContent))
-            .registerTagFactoryMethod(Tags.Date,  (tagName, tagContent) => new DateTag(tagContent))
-            .registerTagFactoryMethod(Tags.Board,  (tagName, tagContent) => new BoardTag(tagContent))
-            .registerTagFactoryMethod(Tags.West,  (tagName, tagContent) => new PlayerTag(tagContent, Position.WEST))
-            .registerTagFactoryMethod(Tags.North,  (tagName, tagContent) => new PlayerTag(tagContent, Position.NORTH))
-            .registerTagFactoryMethod(Tags.East,  (tagName, tagContent) => new PlayerTag(tagContent, Position.EAST))
-            .registerTagFactoryMethod(Tags.South,  (tagName, tagContent) => new PlayerTag(tagContent, Position.SOUTH))
-            .registerTagFactoryMethod(Tags.Dealer,  (tagName, tagContent) => new DealerTag(PositionHelpers.FromString(tagContent)))
-            .registerTagFactoryMethod(Tags.Vulnerable,  (tagName, tagContent) => new VulnerableTag(tagContent))
-            .registerTagFactoryMethod(Tags.Deal,  (tagName, tagContent) => new DealTag(tagContent))
-            .registerTagFactoryMethod(Tags.Scoring,  (tagName, tagContent) => new ScoringTag(tagContent))
-            .registerTagFactoryMethod(Tags.Declarer,  (tagName, tagContent) => new DeclarerTag(tagContent))
-            .registerTagFactoryMethod(Tags.Contract,  (tagName, tagContent) => new ContractTag(tagContent))
-            .registerTagFactoryMethod(Tags.Result, (tagName, tagContent) => new ResultTag(tagContent));
+            factory.RegisterTagFactoryMethod(Tags.Event,  (_, tagContent) => new EventTag(tagContent))
+            .RegisterTagFactoryMethod(Tags.Site,  (_, tagContent) => new SiteTag(tagContent))
+            .RegisterTagFactoryMethod(Tags.Date,  (_, tagContent) => new DateTag(tagContent))
+            .RegisterTagFactoryMethod(Tags.Board,  (_, tagContent) => new BoardTag(tagContent))
+            .RegisterTagFactoryMethod(Tags.West,  (_, tagContent) => new PlayerTag(tagContent, Position.West))
+            .RegisterTagFactoryMethod(Tags.North,  (_, tagContent) => new PlayerTag(tagContent, Position.North))
+            .RegisterTagFactoryMethod(Tags.East,  (_, tagContent) => new PlayerTag(tagContent, Position.East))
+            .RegisterTagFactoryMethod(Tags.South,  (_, tagContent) => new PlayerTag(tagContent, Position.South))
+            .RegisterTagFactoryMethod(Tags.Dealer,  (_, tagContent) => new DealerTag(PositionHelpers.FromString(tagContent)))
+            .RegisterTagFactoryMethod(Tags.Vulnerable,  (_, tagContent) => new VulnerableTag(tagContent))
+            .RegisterTagFactoryMethod(Tags.Deal,  (_, tagContent) => new DealTag(tagContent))
+            .RegisterTagFactoryMethod(Tags.Scoring,  (_, tagContent) => new ScoringTag(tagContent))
+            .RegisterTagFactoryMethod(Tags.Declarer,  (_, tagContent) => new DeclarerTag(tagContent))
+            .RegisterTagFactoryMethod(Tags.Contract,  (_, tagContent) => new ContractTag(tagContent))
+            .RegisterTagFactoryMethod(Tags.Result, (_, tagContent) => new ResultTag(tagContent));
 
 
             return factory;

@@ -1,19 +1,17 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using pbn.tokens;
 
-namespace manipulators;
+namespace pbn.manipulators;
 /// <summary>
 /// Used to execute the --strip command. Used to purge a pbn file of unwanted tokens.
 /// </summary>
-class PbnStripper
+public class PbnStripper
 {
     public List<string> AllowedTags { get; }
 
     /// <summary>
     /// Creates a file stripper with predefined allowed tags.
-    /// The striper removes all tokens except directives and allowed tags.
+    /// The stripper removes all tokens except directives and allowed tags.
     /// Predefined tags are: Generator, Board, Dealer, Vulnerable, Deal, Ability, Minimax, OptimumScore, OptimumResultTable
     /// </summary>
     public PbnStripper()
@@ -48,9 +46,9 @@ class PbnStripper
     /// <param name="file">File to strip</param>
     public void Strip(PbnFile file)
     {
-        for (int i = 0; i < file.Tokens().Count; i++)
+        for (var i = 0; i < file.Tokens.Count; i++)
         {
-            var token = file.Tokens()[i];
+            var token = file.Tokens[i];
 
             if (token is EscapedLine escapedLine && escapedLine.IsDirective)
                 continue;

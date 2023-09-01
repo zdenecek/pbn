@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
+namespace pbn.model;
 
 public enum Position
 {
-    NORTH,
-    EAST,
-    SOUTH,
-    WEST
+    North,
+    East,
+    South,
+    West
 }
 
 public static class PositionHelpers
@@ -20,10 +17,10 @@ public static class PositionHelpers
     {
         return str[0] switch
         {
-            'N' or 'n' => Position.NORTH,
-            'E' or 'e' => Position.EAST,
-            'S' or 's' => Position.SOUTH,
-            'W' or 'w' => Position.WEST,
+            'N' or 'n' => Position.North,
+            'E' or 'e' => Position.East,
+            'S' or 's' => Position.South,
+            'W' or 'w' => Position.West,
             _ => throw new ArgumentException($"Unknown position: {str}" )
         };
     }
@@ -33,10 +30,10 @@ public static class PositionHelpers
 
         return position switch
         {
-            Position.NORTH =>  "North",
-            Position.EAST =>  "East",
-            Position.SOUTH =>  "South",
-            Position.WEST => "West",
+            Position.North =>  "North",
+            Position.East =>  "East",
+            Position.South =>  "South",
+            Position.West => "West",
             _ => throw new ArgumentException($"Unknown position: {position}")
         };
     }

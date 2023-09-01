@@ -1,8 +1,6 @@
-using System;
-
 namespace pbn.tokens
 {
-    public record class ExportEscapedLine : EscapedLine
+    public record ExportEscapedLine : EscapedLine
     {
         public const string ExportLine = EscapedLine.EscapeSequence + " " + "EXPORT";
 

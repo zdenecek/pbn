@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using pbn.model;
 
-namespace pbn;
+namespace pbn.dds;
 
-using System;
-using System.Runtime.InteropServices;
-
-public static class DDSTypes
+public static class DdsTypes
 {
     public const int DDS_HANDS = 4;
     public const int DDS_SUITS = 4;
@@ -101,22 +95,8 @@ public static class DDSTypes
             this.presults = new parResults[MAXNOOFTABLES];
         }
     }
-}
 
-
-public static class DDSInterop
-{
-    private const string DllPath = "dds.dll"; // Update this with the correct DLL name
-
-    [DllImport(DllPath, CallingConvention = CallingConvention.StdCall)]
-    public static extern int CalcAllTablesPBN(
-        ref DDSTypes.ddTableDealsPBN dealsp,
-        int mode,
-        int[] trumpFilter,
-        ref DDSTypes.ddTablesRes resp,
-        ref DDSTypes.allParResults presp);
-
-    public static int vulnerabilityToDDSMode(Vulnerability vul)
+    public static int VulnerabilityToDdsMode(Vulnerability vul)
     {
         /* mode = 0: par calculation, vulnerability None
            mode = 1: par calculation, vulnerability All
@@ -125,65 +105,36 @@ public static class DDSInterop
            mode = -1: no par calculation */
         return vul switch
         {
-            Vulnerability.NONE => 0,
-            Vulnerability.NS => 2,
-            Vulnerability.EW => 3,
-            Vulnerability.BOTH => 1,
+            Vulnerability.None => 0,
+            Vulnerability.Ns => 2,
+            Vulnerability.Ew => 3,
+            Vulnerability.Both => 1,
             _ => throw new ArgumentException($"Unknown vulnerability {vul}")
         };
     }
 
-    public static int suitToDDSStrain(Suit suit)
+    public static int SuitToDdsStrain(Suit suit)
     {
         return suit switch
         {
-            Suit.SPADES => 0,
-            Suit.HEARTS => 1,
-            Suit.DIAMONDS => 2,
-            Suit.CLUBS => 3,
-            Suit.NOTRUMP => 4,
+            Suit.Spades => 0,
+            Suit.Hearts => 1,
+            Suit.Diamonds => 2,
+            Suit.Clubs => 3,
+            Suit.Notrump => 4,
             _ => throw new ArgumentException($"Unknown suit {suit}")
         };
     }
 
-    public static int positionToDDSPos(Position pos)
+    public static int PositionToDdsPos(Position pos)
     {
         return pos switch
         {
-            Position.NORTH => 0,
-            Position.EAST => 1,
-            Position.SOUTH => 2,
-            Position.WEST => 3,
+            Position.North => 0,
+            Position.East => 1,
+            Position.South => 2,
+            Position.West => 3,
             _ => throw new ArgumentException($"Unknown position {pos}")
         };
-    }
-}
-
-
-public class AnalysisServiceDDS : AnalysisService
-{
-    public AnalysisTable AnalyzePbn(string pbnDealString, Vulnerability vulnerability)
-    {
-        var deals = new DDSTypes.ddTableDealsPBN(new string[] { pbnDealString });
-
-        var parResults = new DDSTypes.allParResults();
-
-        var tables = new DDSTypes.ddTablesRes();
-
-        var mode = DDSInterop.vulnerabilityToDDSMode(vulnerability);
-
-        var trumpFilter = new int[DDSTypes.DDS_STRAINS];
-
-
-        DDSInterop.CalcAllTablesPBN(ref deals, mode, trumpFilter, ref tables, ref parResults);
-
-
-        return AnalysisTable.BuildAnalysisTable(
-            (pos, suit) =>
-                tables.results[0]
-                    .resTable[
-                        DDSTypes.DDS_HANDS *  DDSInterop.suitToDDSStrain(suit)+ DDSInterop.positionToDDSPos(pos) 
-                    ]
-            );
     }
 }

@@ -1,12 +1,15 @@
 using System.IO;
-using static pbn.tokens.Commentary;
 
 namespace pbn.tokens;
 
 
-public record class Commentary(Commentary.CommentaryFormat Format, bool StartsOnNewLine, string Content) : SemanticPbnToken
+public record Commentary(Commentary.CommentaryFormat Format, bool StartsOnNewLine, string Content) : SemanticPbnToken
 {
     public override string Typename => "Commentary";
+
+    public const string SinglelineCommentaryStartSequence = ";";
+    public const string MultilineCommentaryStartSequence = "{";
+    public const string MultilineCommentaryEndSequence = "}";
 
     public enum CommentaryFormat
     {
@@ -18,14 +21,14 @@ public record class Commentary(Commentary.CommentaryFormat Format, bool StartsOn
     {
         if (Format == CommentaryFormat.Singleline)
         {
-            to.Write(";");
+            to.Write(SinglelineCommentaryStartSequence);
             to.Write(Content);
         }
         else
         {
-            to.Write("{");
+            to.Write(MultilineCommentaryStartSequence);
             to.Write(Content);
-            to.Write("}");
+            to.Write(MultilineCommentaryEndSequence);
         }
     }
 

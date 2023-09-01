@@ -7,7 +7,7 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        CommandLine.Parser.Default.ParseArguments<Options>(args)
+        Parser.Default.ParseArguments<Options>(args)
           .WithParsed(RunOptions)
           .WithNotParsed(HandleParseError);
     }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "pbn": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\zdnek\\src\\pbncs\\pbn_files\\bigdeal.pbn --debug"
+    }
+  }
+}

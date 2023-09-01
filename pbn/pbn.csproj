@@ -24,4 +24,9 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="src\pbn\" />
+    <Folder Include="src\program\" />
+  </ItemGroup>
+
 </Project>

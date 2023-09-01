@@ -1,9 +1,8 @@
-using System;
 using System.IO;
 
 namespace pbn.tokens;
 
-public abstract record class SemanticPbnToken
+public abstract record SemanticPbnToken
 {
     public override string ToString()
     {

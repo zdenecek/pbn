@@ -1,9 +1,8 @@
-using System;
 using System.Text.RegularExpressions;
 
 namespace pbn.tokens
 {
-    public abstract record class EscapedLine : SemanticPbnToken
+    public abstract record EscapedLine : SemanticPbnToken
     {
         public const string EscapeSequence = "%";
 

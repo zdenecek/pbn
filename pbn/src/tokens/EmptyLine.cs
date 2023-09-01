@@ -1,9 +1,8 @@
-using System;
 using System.IO;
 
 namespace pbn.tokens
 {
-    public record class EmptyLine : SemanticPbnToken
+    public record EmptyLine : SemanticPbnToken
     {
 
         public override string Typename => "Empty Line";

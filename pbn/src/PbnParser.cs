@@ -1,33 +1,35 @@
-
 using System;
 using System.Collections.Generic;
 using System.IO;
-using static pbn.tokens.Commentary;
+using System.Linq;
 using System.Text.RegularExpressions;
 using pbn.tokens;
-using System.Linq;
-/// @brief Class used to parse a pbn file from an input stream.
+using static pbn.tokens.Commentary;
+
+namespace pbn;
+
+///  Class used to parse a pbn file from an input stream.
 public class PbnParser
 {
 
 
-    /// @brief Represents the recovery mode of the parser, what it should do when a lexical or syntactical error is encountered
+    ///  Represents the recovery mode of the parser, what it should do when a lexical or syntactical error is encountered
     /// @see PbnParser::PbnParser(RecoveryMode mode)
     /// Only strict mode is supported at the moment
     public enum RecoveryMode
     {
         /**
-         * @brief Strict mode. If the parser encounters an error, it will throw an exception.
-         */
+     *  Strict mode. If the parser encounters an error, it will throw an exception.
+     */
         Strict,
         /**
-         * @brief Relaxed mode, if an error is encountered, the parser will try to recover and parse next tag.
-         */
+     *  Relaxed mode, if an error is encountered, the parser will try to recover and parse next tag.
+     */
         SkipToNextTag,
         /**
-         * @brief Relaxed mode, if an error is encountered, the parser will try to recover and parse next board.
-         * If there is no board context and an error is encountered, parser will try to skip and parse next tag.
-         */
+     *  Relaxed mode, if an error is encountered, the parser will try to recover and parse next board.
+     * If there is no board context and an error is encountered, parser will try to skip and parse next tag.
+     */
         SkipToNextBoard
     }
 
@@ -44,32 +46,32 @@ public class PbnParser
 
     public RecoveryMode Mode { get; init; }
 
-    private TagFactory tagFactory;
-    private readonly char[] WhiteSpaceCharacters = " \t\n\v\f\r".ToCharArray();
-    private const char StringDelimiter = '\"';
-    private int currentLine = 0;
+    private readonly TagFactory tagFactory;
+    private readonly char[] whiteSpaceCharacters = " \t\n\v\f\r".ToCharArray();
+    private int currentLine;
 
-    private string Getline(ref System.IO.StreamReader inputStream, ref string line)
+    private string Getline(StreamReader inputStream)
     {
         currentLine++;
-        return line = inputStream.ReadLine();
+        return inputStream.ReadLine();
     }
 
-    public List<string> GetTableValues(ref string line, ref System.IO.StreamReader inputStream)
+    public List<string> GetTableValues(ref string line, StreamReader inputStream)
     {
         List<string> values = new List<string>();
         if (line.Length == 0 && inputStream.EndOfStream)
         {
             return values;
         }
-        while (!(line.StartsWith("[") || line.Length == 0 || line.StartsWith(";")))
+        while (!(line.StartsWith("[") || line.Length == 0 || line.StartsWith(Commentary.SinglelineCommentaryStartSequence)))
         {
-            SplitStr(line, values);
+            var newValues = line.Split(" ");
+            values.AddRange(newValues);
             if (inputStream.EndOfStream)
             {
                 break;
             }
-            Getline(ref inputStream, ref line);
+            line = Getline(inputStream).Trim();
         }
         return values;
     }
@@ -93,7 +95,7 @@ public class PbnParser
         }
         else if (firstValidCharacter == ';')
         {
-            var token = new Commentary(Commentary.CommentaryFormat.Singleline, true, line[1..]);
+            var token = new Commentary(CommentaryFormat.Singleline, true, line[1..]);
             line = "";
             return token;
         }
@@ -109,7 +111,7 @@ public class PbnParser
         }
     }
 
-    public Tag ParseTag(ref string line, ref System.IO.StreamReader inputStream, bool startedOnNewLine)
+    public Tag ParseTag(ref string line, ref StreamReader inputStream, bool startedOnNewLine)
     {
         Regex regex1 = new Regex(@"(\s*\[\s*(\w+)\s*""(.*)""\s*\]\s*)");
         Match matches = regex1.Match(line);
@@ -129,7 +131,7 @@ public class PbnParser
 
         if (this.tagFactory.IsTableTag(tagName))
         {
-            List<string> tableValues = GetTableValues(ref line, ref inputStream);
+            List<string> tableValues = GetTableValues(ref line, inputStream);
             tag = tagFactory.CreateTableTag(tagName, tagContent, new List<string>(tableValues));
         }
         else
@@ -137,7 +139,7 @@ public class PbnParser
             tag = tagFactory.CreateTag(tagName, tagContent);
         }
 
-        if (line.Trim(WhiteSpaceCharacters).Length == 0)
+        if (line.Trim(whiteSpaceCharacters).Length == 0)
         {
             line = "";
         }
@@ -145,7 +147,7 @@ public class PbnParser
         return tag;
     }
 
-    public Commentary ParseMultilineComment(ref string line, ref System.IO.StreamReader inputStream, bool startedOnNewLine)
+    public Commentary ParseMultilineComment(ref string line, ref StreamReader inputStream, bool startedOnNewLine)
     {
         int start = line.IndexOf('{');
         int lineno = currentLine;
@@ -159,16 +161,16 @@ public class PbnParser
             {
                 throw new InvalidOperationException("Multiline comment not closed at line " + lineno);
             }
-            Getline(ref inputStream, ref line);
+            line = Getline( inputStream);
         }
-        int end = line.IndexOf("}");
+        int end = line.IndexOf("}", StringComparison.Ordinal);
         content += line.Substring(0, end);
 
         line = line.Remove(0, end);
 
         Commentary token = new Commentary(CommentaryFormat.Multiline, startedOnNewLine, content);
 
-        if (line.Trim(WhiteSpaceCharacters).Length == 0)
+        if (line.Trim(whiteSpaceCharacters).Length == 0)
         {
             line = "";
         }
@@ -176,7 +178,7 @@ public class PbnParser
         return token;
     }
 
-    public PbnFile Parse(System.IO.StreamReader inputStream)
+    public PbnFile Parse(StreamReader inputStream)
     {
         PbnFile file = new PbnFile();
 
@@ -193,18 +195,5 @@ public class PbnParser
         return file;
     }
 
-    private void SplitStr(string str, List<string> result)
-    {
-        int currentIndex = 0;
-        while (currentIndex < str.Length)
-        {
-            int nextIndex = str.IndexOf(' ', currentIndex);
-            if (nextIndex == -1)
-            {
-                nextIndex = str.Length;
-            }
-            result.Add(str.Substring(currentIndex, nextIndex - currentIndex));
-            currentIndex = nextIndex + 1;
-        }
-    }
+
 }

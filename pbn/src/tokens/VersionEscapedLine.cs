@@ -1,10 +1,8 @@
-using System;
-using System.Text.RegularExpressions;
 using System.IO;
 
 namespace pbn.tokens
 {
-    public record class VersionEscapedLine : EscapedLine
+    public record VersionEscapedLine : EscapedLine
     {
 
         public const string VersionLinePrefix = EscapeSequence + " " + "PBN" + " ";

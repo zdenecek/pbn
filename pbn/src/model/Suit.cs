@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+namespace pbn.model;
 
 public enum Suit
 {
-    NOTRUMP,
-    SPADES,
-    HEARTS,
-    DIAMONDS,
-    CLUBS,
+    Notrump,
+    Spades,
+    Hearts,
+    Diamonds,
+    Clubs,
 }
 
 
@@ -21,11 +19,11 @@ public static class SuitHelpers
     {
         return str[0] switch
         {
-            'N' or 'n' => Suit.NOTRUMP,
-            'S' or 's' => Suit.SPADES,
-            'H' or 'h' => Suit.HEARTS,
-            'D' or 'd' => Suit.DIAMONDS,
-            'C' or 'c' => Suit.CLUBS,
+            'N' or 'n' => Suit.Notrump,
+            'S' or 's' => Suit.Spades,
+            'H' or 'h' => Suit.Hearts,
+            'D' or 'd' => Suit.Diamonds,
+            'C' or 'c' => Suit.Clubs,
             _ => throw new ArgumentException($"Unknown suit: {str}")
         };
     }
@@ -35,11 +33,11 @@ public static class SuitHelpers
 
         return suit switch
         {
-            Suit.NOTRUMP => "No trumps",
-            Suit.SPADES => "Spades",
-            Suit.HEARTS => "Hearts",
-            Suit.DIAMONDS => "Diamonds",
-            Suit.CLUBS => "Clubs",
+            Suit.Notrump => "No trumps",
+            Suit.Spades => "Spades",
+            Suit.Hearts => "Hearts",
+            Suit.Diamonds => "Diamonds",
+            Suit.Clubs => "Clubs",
             _ => throw new ArgumentException($"Unknown suit: {suit}")
         };
     }

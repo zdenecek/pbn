@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using pbn.model;
 
-public interface AnalysisService
+namespace pbn.service;
+
+public interface IAnalysisService
 {
     AnalysisTable AnalyzePbn(string pbnDealStrings, Vulnerability vulnerability);
 }

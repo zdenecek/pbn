@@ -1,9 +1,8 @@
-using System;
 using System.IO;
 
 namespace pbn.tokens
 {
-    public record class CustomEscapedLine(string Content) : EscapedLine
+    public record CustomEscapedLine(string Content) : EscapedLine
     {
         public override string Typename => "Escaped Line";
 

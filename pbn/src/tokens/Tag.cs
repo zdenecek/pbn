@@ -1,9 +1,8 @@
-using System;
 using System.IO;
 
 namespace pbn.tokens
 {
-    public record class Tag(string Tagname, string Content) : SemanticPbnToken
+    public record Tag(string Tagname, string Content) : SemanticPbnToken
     {
         public override string Typename => "Tag";
 
