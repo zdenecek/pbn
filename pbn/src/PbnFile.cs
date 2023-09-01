@@ -322,7 +322,7 @@ public class PbnFile
     private IEnumerable<SemanticPbnToken> GetContextTokens(BoardContextId id)
     {
         var range = BoardContextIdToTokenRange[id];
-        return this.tokens.GetRange(range.StartIndex, range.StartIndex + range.TokenCount);
+        return this.tokens.GetRange(range.StartIndex,  range.TokenCount);
     }
 
     /// <summary>

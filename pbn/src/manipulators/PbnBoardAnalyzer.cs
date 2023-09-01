@@ -42,7 +42,7 @@ public class PbnBoardAnalyzer
 
     public bool HasAnalysis(PbnFile.BoardContext context)
     {
-        
+        return false;
     }
 
 }
