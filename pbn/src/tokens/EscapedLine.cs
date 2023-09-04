@@ -9,10 +9,11 @@ namespace pbn.tokens
 
         public static EscapedLine Create(string contents)
         {
-            if (contents == ExportLine)
+            if (contents == ExportEscapedLine.ExportLine)
             {
                 return new ExportEscapedLine();
             }
+
             if (IsVersionLine(contents))
             {
                 return new VersionEscapedLine(contents.Substring(VersionEscapedLine.VersionLinePrefix.Length));
@@ -24,19 +25,14 @@ namespace pbn.tokens
         private static bool IsVersionLine(string line)
         {
             if (!line.StartsWith(VersionEscapedLine.VersionLinePrefix))
-            {
                 return false;
-            }
-            else
-            {
-                return VersionRegex.IsMatch(line);
-            }
+
+            var versionCandidate = line.Substring(VersionEscapedLine.VersionLinePrefix.Length);
+            return VersionRegex.IsMatch(versionCandidate);
         }
 
         public bool IsDirective => this is VersionEscapedLine or ExportEscapedLine;
 
-        private static readonly Regex VersionRegex = new Regex(VersionEscapedLine.VersionLinePrefix + @"\d\.\d$");
-        private const string ExportLine = " Export";
+        private static readonly Regex VersionRegex = new Regex(@"\d\.\d$");
     }
-
 }

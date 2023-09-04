@@ -1,9 +1,18 @@
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using pbn.model;
+using pbn.service;
+using pbn.utils;
 
 namespace pbn.manipulators;
 
+
+
 public class PbnBoardAnalyzer
 {
+    private IAnalysisService analysisService;
+    
     public enum AnalysisType
     {
         /// <summary>
@@ -14,8 +23,8 @@ public class PbnBoardAnalyzer
         /// <item> Ability </item>
         /// </list>
         /// </summary>
-        DeepFinesseAnalysis,
-        
+        AbilityAnalysis,
+
         /// <summary>
         /// Analysis in format of one made with Bridge Composer. Generated file usually is version 2.1.
         /// Contains following tags:
@@ -29,20 +38,85 @@ public class PbnBoardAnalyzer
         /// See bridgecomposer.pbn file for example.
         /// Note that BridgeComposer generated file is usually bloated.
         /// </summary>
-        BridgeComposeAnalysis
+        OptimumResultTableAnalysis
     }
-    
+
+    private static readonly HashSet<string> OptimumResultTableTokenNames = new HashSet<string>
+        { "OptimumResultTable", "OptimumScore", "DoubleDummyTricks" };
+
+    private static readonly HashSet<string> AbilityAnalysisTokenNames = new HashSet<string>
+        { "Minimax", "Ability" };
+
+    public PbnBoardAnalyzer(DdsAnalysisService analysisService)
+    {
+        this.analysisService = analysisService;
+    }
+
+    private HashSet<string> GetAnalysisTagNames(AnalysisType type)
+    {
+        return type switch
+        {
+            AnalysisType.AbilityAnalysis => AbilityAnalysisTokenNames,
+            AnalysisType.OptimumResultTableAnalysis => OptimumResultTableTokenNames,
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        };
+    }
+
     public void AddAnalyses(PbnFile file)
     {
+        PurgeAnalysesTokens(file, AnalysisType.OptimumResultTableAnalysis);
+
+        var toBeAnalyzed = new List<PbnFile.BoardContext>();
+        
         foreach (var board in file.Boards)
         {
+            if (HasAnalysis(board, AnalysisType.AbilityAnalysis))
+                continue;
+            
+            PurgeAnalysesTokens(file, board, AnalysisType.AbilityAnalysis);
+            toBeAnalyzed.Add(board);
+        }
+        
+        AddAnalyses(file, toBeAnalyzed);
+    }
+
+    private void AddAnalyses(PbnFile file, List<PbnFile.BoardContext> boardContexts)
+    {
+        var boards = boardContexts.Cast<Board>();
+        var tables = analysisService.AnalyzeBoards(boards);
+
+        foreach (var (context, analysisTable) in boardContexts.Zip(tables))
+        {
+            
         }
     }
 
-
-    public bool HasAnalysis(PbnFile.BoardContext context)
+    public void PurgeAnalysesTokens(PbnFile file, AnalysisType type)
     {
-        return false;
+        var names = GetAnalysisTagNames(type);
+        var toDelete = file.Tokens.GetAllTagsByNames(names);
+        
+        foreach (var tag in toDelete)
+        {
+            file.DeleteToken(tag);
+        }
     }
+    
+    public void PurgeAnalysesTokens(PbnFile file, PbnFile.BoardContext context, AnalysisType type)
+    {
+        var names = GetAnalysisTagNames(type);
+        var toDelete = context.Tokens.GetAllTagsByNames(names);
+        
+        foreach (var tag in toDelete)
+        {
+            file.DeleteToken(tag);
+        }
+    } 
 
+
+    public bool HasAnalysis(PbnFile.BoardContext context, AnalysisType type)
+    {
+        var names = this.GetAnalysisTagNames(type);
+        return context.Tokens.GetAllTagsByNames(names).Any();
+    }
 }

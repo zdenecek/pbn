@@ -1,19 +1,21 @@
-﻿using pbn.dds;
+﻿using System.Collections.Generic;
+using pbn.dds;
 using pbn.model;
 
 namespace pbn.service;
 
 public class DdsAnalysisService : IAnalysisService
 {
-    public AnalysisTable AnalyzePbn(string pbnDealString, Vulnerability vulnerability)
+
+    public AnalysisTable AnalyzeBoard(Board board)
     {
-        var deals = new DdsTypes.ddTableDealsPBN(new[] { pbnDealString });
+        var deals = new DdsTypes.ddTableDealsPBN(new[] { board.CardString });
 
         var parResults = new DdsTypes.allParResults();
 
         var tables = new DdsTypes.ddTablesRes();
 
-        var mode = DdsTypes.VulnerabilityToDdsMode(vulnerability);
+        var mode = DdsTypes.VulnerabilityToDdsMode(board.Vulnerability);
 
         var trumpFilter = new int[DdsTypes.DDS_STRAINS];
 
@@ -28,5 +30,10 @@ public class DdsAnalysisService : IAnalysisService
                         DdsTypes.DDS_HANDS * DdsTypes.SuitToDdsStrain(suit) + DdsTypes.PositionToDdsPos(pos)
                     ]
         );
+    }
+
+    public AnalysisTable[] AnalyzeBoards(IEnumerable<Board> boards)
+    {
+        throw new System.NotImplementedException();
     }
 }

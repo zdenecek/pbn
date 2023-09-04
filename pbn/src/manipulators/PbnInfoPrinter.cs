@@ -36,11 +36,11 @@ class PbnInfoPrinter
     /// Tries to find generator info encoded in the Generator tag. 
     /// </summary>
     /// <returns>Contents of the generator tag, null if no such tag is found</returns>
-    public static string GetGeneratorInfo(PbnFile file)
+    public static string? GetGeneratorInfo(PbnFile file)
     {
         var token = file.Tokens.FirstOrDefault(t =>
         {
-            if (t is Tag tag && tag.Tagname == "Generator")
+            if (t is Tag tag && tag.Name == "Generator")
                 return true;
             return false;
         });
@@ -48,6 +48,6 @@ class PbnInfoPrinter
         if (token == null)
             return "";
 
-        return (token as Tag)?.Content ?? null;
+        return (token as Tag)?.Value ?? null;
     }
 }

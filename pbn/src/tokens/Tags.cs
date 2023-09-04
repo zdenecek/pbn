@@ -54,15 +54,12 @@ public class Tags
         };
 
     public static readonly IReadOnlySet<string> TableTags = new HashSet<string> {
-            DoubleDummyTricks,
-            OptimumScore,
             OptimumResultTable,
             ActionTable,
             AuctionTimeTable,
             InstantScoreTable,
             OptimumPlayTable,
             PlayTimeTable,
-            ScoreTable,
             ScoreTable,
             TotalScoreTable
         };

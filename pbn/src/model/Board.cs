@@ -1,5 +1,5 @@
 ﻿namespace pbn.model;
 
-class Board
+public record struct Board(int Number, Vulnerability Vulnerability, Position Dealer, string CardString)
 {
 }

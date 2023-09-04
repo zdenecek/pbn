@@ -1,12 +1,12 @@
-
-
 global using BoardContextId = System.Int32;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using pbn.model;
 using pbn.tokens;
+using pbn.tokens.tags;
 
 
 namespace pbn;
@@ -16,8 +16,6 @@ namespace pbn;
 /// </summary>
 public class PbnFile
 {
-
-
     /// <summary>
     /// Returns all boards contexts in the file.
     /// <seealso cref="BoardContext"/>
@@ -27,7 +25,7 @@ public class PbnFile
     /// <summary>
     /// Returns true if the file is in export format, i.e. contains the export directive.
     /// </summary>
-    public bool IsExportFormat => tokens.Any(t => t is ExportEscapedLine);
+    public bool IsExportFormat => tokens.GetRange(0, 10).Any(t => t is ExportEscapedLine);
 
     /// <summary>
     /// Returns true if at least one board with the given number is present in the file.
@@ -65,7 +63,7 @@ public class PbnFile
     {
         tokens.Add(token);
 
-        if (!(token is Tag tag) || !Tags.IsBoardScopeTag(tag.Tagname))
+        if (!(token is Tag tag) || !Tags.IsBoardScopeTag(tag.Name))
         {
             return;
         }
@@ -77,7 +75,8 @@ public class PbnFile
         {
             var newBoardContext = new BoardContext(GetNewContextId, this);
             boards.Add(newBoardContext);
-            BoardContextIdToTokenRange[newBoardContext.Id] = new TokenRange { StartIndex = this.tokens.Count - 1, TokenCount = 1 };
+            BoardContextIdToTokenRange[newBoardContext.Id] = new TokenRange
+                { StartIndex = this.tokens.Count - 1, TokenCount = 1 };
             newBoardContext.ApplyTag(tag);
         }
         else
@@ -135,6 +134,7 @@ public class PbnFile
             {
                 boards[id.Value].UnapplyTag(tagFrom);
             }
+
             if (with is Tag tagWith)
             {
                 boards[id.Value].ApplyTag(tagWith);
@@ -211,12 +211,15 @@ public class PbnFile
         /// </summary>
         public readonly BoardContextId Id;
 
-        public int BoardNumber
-        {
-            get;
-            private set;
-        }
+        public int BoardNumber { get; private set; }
         private readonly PbnFile pbnFile;
+
+        private readonly Dictionary<string, List<Tag>> tagsByName = new();
+
+        private T? GetTag<T>(string name) where T : Tag
+        {
+            return tagsByName[name].FirstOrDefault() as T;
+        }
 
         public BoardContext(int id, PbnFile pbnFile)
         {
@@ -224,17 +227,19 @@ public class PbnFile
             this.pbnFile = pbnFile;
         }
 
-
         /// <summary>
         ///  Apply the given token to this context. Used to validate file state.
         /// </summary>
-        public void ApplyTag(Tag token)
+        public void ApplyTag(Tag tag)
         {
-            if (token.Tagname == Tags.Board)
+            if (tag.Name == Tags.Board)
             {
                 Debug.Assert(this.BoardNumber == 0, "Internal error: Board number is already set.");
-                this.BoardNumber = int.Parse(token.Content);
+                this.BoardNumber = int.Parse(tag.Value);
             }
+
+            if (!tagsByName.ContainsKey(tag.Name)) tagsByName[tag.Name] = new List<Tag>();
+            tagsByName[tag.Name].Add(tag);
         }
 
         /// <summary>
@@ -242,11 +247,12 @@ public class PbnFile
         /// </summary>
         public void UnapplyTag(Tag token)
         {
-            if (token.Tagname == Tags.Board && this.BoardNumber != 0)
+            if (token.Name == Tags.Board && this.BoardNumber != 0)
             {
                 throw new InvalidOperationException("Internal error: Board number cannot be changed.");
             }
-            if (token.Tagname == Tags.Board)
+
+            if (token.Name == Tags.Board)
             {
                 this.BoardNumber = 0;
             }
@@ -255,21 +261,21 @@ public class PbnFile
         /// <summary>
         /// Check whether a given token can be applied to the context.
         /// </summary>
-        /// <param name="token"></param>
+        /// <param name="token" />
         /// <param name="atIndex">Where would the token be added. Null means after the last token currently in the context.</param>
         public bool AcceptsToken(SemanticPbnToken token, int? atIndex = null)
         {
             atIndex ??= this.Tokens.Count();
 
-            if (token is not Tag(var tagname, var _)) return true;
+            if (token is not Tag(var tagName, var _)) return true;
 
-            if (Tags.IsTagRecognized(tagname))
+            if (Tags.IsTagRecognized(tagName))
             {
                 return !Tokens.Any(x =>
                 {
-                    if (x is not Tag(var tagname2, var _)) return false;
+                    if (x is not Tag(var tagName2, var _)) return false;
 
-                    return tagname2 == tagname;
+                    return tagName2 == tagName;
                 });
             }
 
@@ -281,6 +287,23 @@ public class PbnFile
         /// Invalidates when a token is added or removed from this context.
         /// </summary>
         public IEnumerable<SemanticPbnToken> Tokens => this.pbnFile.GetContextTokens(this.Id);
+
+        public Board AsBoard()
+        {
+            var vulnerability = this.GetTag<VulnerableTag>(VulnerableTag.TagName)?.Vulnerability;
+            var dealer = this.GetTag<DealerTag>(DealerTag.TagName)?.Position;
+            var cards = this.GetTag<DealTag>(DealTag.TagName)?.Value;
+
+            if (!vulnerability.HasValue || !dealer.HasValue || cards is null)
+                throw new PbnError("Cannot create board: Invalid board context ");
+
+            return new Board(
+                this.BoardNumber,
+                vulnerability.Value,
+                dealer.Value,
+                cards
+            );
+        }
     }
 
     private int contextIdIncrementGenerator = 1;
@@ -291,6 +314,7 @@ public class PbnFile
     {
         ///  Index of the first token in the range in the tokens vector.
         public int StartIndex;
+
         ///  Number of tokens in the range, starting at 1.
         public int TokenCount;
     }
@@ -302,11 +326,12 @@ public class PbnFile
 
     private BoardContextId? FindRange(int tokenIndex)
     {
-        foreach ( var  (key, range) in BoardContextIdToTokenRange)
+        foreach (var (key, range) in BoardContextIdToTokenRange)
         {
             if (range.StartIndex <= tokenIndex && range.StartIndex + range.TokenCount > tokenIndex)
                 return key;
         }
+
         return null;
     }
 
@@ -322,7 +347,7 @@ public class PbnFile
     private IEnumerable<SemanticPbnToken> GetContextTokens(BoardContextId id)
     {
         var range = BoardContextIdToTokenRange[id];
-        return this.tokens.GetRange(range.StartIndex,  range.TokenCount);
+        return this.tokens.GetRange(range.StartIndex, range.TokenCount);
     }
 
     /// <summary>

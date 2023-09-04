@@ -11,8 +11,6 @@ namespace pbn;
 ///  Class used to parse a pbn file from an input stream.
 public class PbnParser
 {
-
-
     ///  Represents the recovery mode of the parser, what it should do when a lexical or syntactical error is encountered
     /// @see PbnParser::PbnParser(RecoveryMode mode)
     /// Only strict mode is supported at the moment
@@ -22,10 +20,12 @@ public class PbnParser
      *  Strict mode. If the parser encounters an error, it will throw an exception.
      */
         Strict,
+
         /**
      *  Relaxed mode, if an error is encountered, the parser will try to recover and parse next tag.
      */
         SkipToNextTag,
+
         /**
      *  Relaxed mode, if an error is encountered, the parser will try to recover and parse next board.
      * If there is no board context and an error is encountered, parser will try to skip and parse next tag.
@@ -33,7 +33,9 @@ public class PbnParser
         SkipToNextBoard
     }
 
-    public PbnParser() : this(RecoveryMode.Strict, TagFactory.Default()) { }
+    public PbnParser() : this(RecoveryMode.Strict, TagFactory.Default())
+    {
+    }
 
     public PbnParser(RecoveryMode mode, TagFactory factory)
     {
@@ -50,7 +52,7 @@ public class PbnParser
     private readonly char[] whiteSpaceCharacters = " \t\n\v\f\r".ToCharArray();
     private int currentLine;
 
-    private string Getline(StreamReader inputStream)
+    private string? Getline(StreamReader inputStream)
     {
         currentLine++;
         return inputStream.ReadLine();
@@ -59,26 +61,29 @@ public class PbnParser
     public List<string> GetTableValues(ref string line, StreamReader inputStream)
     {
         List<string> values = new List<string>();
-        if (line.Length == 0 && inputStream.EndOfStream)
-        {
+
+        if (line.Length == 0 && (line = Getline(inputStream)) == null )
             return values;
-        }
-        while (!(line.StartsWith("[") || line.Length == 0 || line.StartsWith(Commentary.SinglelineCommentaryStartSequence)))
+
+        while (!(line.StartsWith("[") || line.Length == 0 ||
+                 line.StartsWith(Commentary.SinglelineCommentaryStartSequence)))
         {
-            var newValues = line.Split(" ");
+            var newValues = line.Split(" ",  StringSplitOptions.RemoveEmptyEntries);
             values.AddRange(newValues);
-            if (inputStream.EndOfStream)
+            line = Getline(inputStream)?.Trim();
+            if (line == null)
             {
+                line = "";
                 break;
             }
-            line = Getline(inputStream).Trim();
         }
+
         return values;
     }
 
     public SemanticPbnToken ParseToken(ref string line, StreamReader inputStream, bool startedOnNewLine)
     {
-        line = new string(line.SkipWhile(char.IsWhiteSpace).ToArray());
+        line = line.TrimStart();
         if (line == "")
             return new EmptyLine();
         if (line.StartsWith(EscapedLine.EscapeSequence))
@@ -87,6 +92,7 @@ public class PbnParser
             line = "";
             return token;
         }
+
         char firstValidCharacter = line[0];
         if (firstValidCharacter == '[')
         {
@@ -157,12 +163,12 @@ public class PbnParser
         while (line.IndexOf('}') == -1)
         {
             content += line + "\n";
-            if (inputStream.EndOfStream)
+            if ((line = Getline(inputStream)) == null)
             {
                 throw new InvalidOperationException("Multiline comment not closed at line " + lineno);
             }
-            line = Getline( inputStream);
         }
+
         int end = line.IndexOf("}", StringComparison.Ordinal);
         content += line.Substring(0, end);
 
@@ -182,7 +188,7 @@ public class PbnParser
     {
         PbnFile file = new PbnFile();
 
-        string line;
+        string? line;
         while ((line = inputStream.ReadLine()) != null)
         {
             file.AppendToken(ParseToken(ref line, inputStream, false));
@@ -194,6 +200,4 @@ public class PbnParser
 
         return file;
     }
-
-
 }

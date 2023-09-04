@@ -22,96 +22,100 @@ namespace pbn.tokens.tags;
 */
 
 
-public record BoardTag : Tag
+public record BoardTag(string Value) : Tag(Tags.Board, Value)
 {
-    public int BoardNumber { get; init; }
-
-    public BoardTag(string content) : base(Tags.Board, content)
-    {
-        this.BoardNumber = int.Parse(content);
-    }
+    public static string TagName => "Board";
+    public int BoardNumber { get; init; } = int.Parse(Value);
 }
 
 public record EventTag : Tag
 {
-    public EventTag(string content) : base(Tags.Event, content)
+    public static string TagName => "Event";
+    public EventTag(string value) : base(Tags.Event, value)
     {
     }
 }
 
 public record SiteTag : Tag
 {
-    public SiteTag(string content) : base(Tags.Site, content)
+    public static string TagName => "Site";
+    public SiteTag(string value) : base(Tags.Site, value)
     {
     }
 }
 
 public record DateTag : Tag
 {
-    public DateTag(string content) : base(Tags.Date, content)
+    public static string TagName => "Date";
+    public DateTag(string value) : base(Tags.Date, value)
     {
     }
 }
 
 public record PlayerTag : Tag
 {
-    public PlayerTag(string content, Position position) : base(position switch
-    {
-        Position.North => Tags.North,
-        Position.East => Tags.East,
-        Position.South => Tags.South,
-        Position.West => Tags.West,
-        _ => throw new ArgumentException()
-    }, content)
+    public Position Position => PositionHelpers.FromString(Value);
+    public PlayerTag(string name, string value) : base(name, value)
     {
     }
 }
 
 public record DealerTag : Tag
 {
-    public DealerTag(Position position) : base(Tags.Dealer, position.ToString()[0..1])
+    public static string TagName => "Dealer";
+    public Position Position => PositionHelpers.FromString(this.Value);
+
+    public DealerTag(string value) : base(Tags.Dealer, value)
     {
     }
 }
 
 public record VulnerableTag : Tag
 {
-    public VulnerableTag(string content) : base(Tags.Vulnerable, content)
+    public static string TagName => "Vulnerable";
+    public Vulnerability Vulnerability => VulnerabilityHelpers.FromString(Value);
+    
+    public VulnerableTag(string value) : base(Tags.Vulnerable, value)
     {
     }
 }
 
 public record DealTag : Tag
 {
-    public DealTag(string content) : base(Tags.Deal, content)
+    public static string TagName => "Deal";
+    public DealTag(string value) : base(Tags.Deal, value)
     {
     }
 }
 
 public record ScoringTag : Tag
 {
-    public ScoringTag(string content) : base(Tags.Scoring, content)
+    public static string TagName => "Scoring";
+    public ScoringTag(string value) : base(Tags.Scoring, value)
     {
     }
 }
 
 public record DeclarerTag : Tag
 {
-    public DeclarerTag(string content) : base(Tags.Declarer, content)
+    public static string TagName => "Declarer";
+    public DeclarerTag(string value) : base(Tags.Declarer, value)
     {
     }
 }
 
 public record ContractTag : Tag
 {
-    public ContractTag(string content) : base(Tags.Contract, content)
+    public static string TagName => "Contract";
+    public ContractTag(string value) : base(Tags.Contract, value)
     {
     }
 }
 
 public record ResultTag : Tag
 {
-    public ResultTag(string content) : base(Tags.Result, content)
+    public static string TagName => "Result";
+    public ResultTag(string value) : base(Tags.Result, value)
     {
     }
 }

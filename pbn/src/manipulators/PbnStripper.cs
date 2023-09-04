@@ -53,7 +53,7 @@ public class PbnStripper
             if (token is EscapedLine escapedLine && escapedLine.IsDirective)
                 continue;
 
-            if (token is Tag tag && AllowedTags.Contains(tag.Tagname))
+            if (token is Tag tag && AllowedTags.Contains(tag.Name))
                 continue;
 
             file.DeleteToken(token);

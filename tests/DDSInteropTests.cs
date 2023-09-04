@@ -18,8 +18,13 @@ namespace tests
         [TestMethod()]
         public void CalcAllTablesPbnPbnTest()
         {
-            var table = service.AnalyzePbn("N:A873.AJ83.52.Q32 95.74.AQJ84.T754 QT62.KQ62.K93.K8 KJ4.T95.T76.AJ96",
-                Vulnerability.None);
+            var table = service.AnalyzeBoard(new Board
+            {
+                Number = 1,
+                CardString = "N:A873.AJ83.52.Q32 95.74.AQJ84.T754 QT62.KQ62.K93.K8 KJ4.T95.T76.AJ96",
+                Dealer = Position.East,
+                Vulnerability = Vulnerability.None
+            });
             
 
 

@@ -1,14 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace pbn.tokens;
 
 public record
-    TableTag(string Tagname, string Content, IList<string> Values) : Tag(Tagname, Content)
+    TableTag(string Name, string Value, IList<string> Values) : Tag(Name, Value)
 {
-    public IList<ColumnInfo> Columns { get; init; } = ParseColumnInfo(Content);
+    public IList<ColumnInfo> Columns { get; init; } = ParseColumnInfo(Value);
 
+    public override string Typename => "Table Tag";
+
+    
     public record struct ColumnInfo(string Name, ColumnInfo.ColumnOrdering Ordering,
         ColumnInfo.ColumnAlignment Alignment, int AlignmentWidth)
     {
@@ -101,5 +105,33 @@ public record
             throw new FormatException("Only one column can be ordered: " + tagContent);
 
         return infos;
+    }
+
+
+    public override void Serialize(TextWriter to)
+    {
+        base.Serialize(to);
+        to.Write("\n");
+        foreach (var row in Values.Chunk(this.Columns.Count))
+        {
+            bool first = true;
+            foreach (  var ( item, col) in row.Zip(this.Columns))
+            {
+                if (!first)
+                    to.Write(' ');
+                else 
+                    first = false;
+                to.Write(
+                    col.Alignment switch
+                    {
+                        ColumnInfo.ColumnAlignment.None => item,
+                        ColumnInfo.ColumnAlignment.Left => item.PadLeft(col.AlignmentWidth),
+                        ColumnInfo.ColumnAlignment.Right => item.PadRight(col.AlignmentWidth),
+                        _ => throw new ArgumentOutOfRangeException()
+                    }
+                    );
+            }
+            to.Write("\n");
+        }
     }
 }

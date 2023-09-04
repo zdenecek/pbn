@@ -107,10 +107,10 @@ class Options
     public bool Strip { get; set; }
 
     [Option('a', "analyze", Default = "x",HelpText = "Create double dummy analyses for each board")]
-    public string Analyze { get; set; }
+    public string? Analyze { get; set; }
 
     [Value(1, MetaName = "output-file", HelpText = "Output file name, if not specified, the program will use the input file name")]
-    public string Output { get; set; }
+    public string? Output { get; set; }
 
     [Option('w', "overwrite", HelpText = "Overwrite the input file with output")]
     public bool Overwrite { get; set; }
@@ -119,7 +119,7 @@ class Options
     public bool Info { get; set; }
 
     [Value(0, MetaName = "input-file", Required = true, HelpText = "Input file name")]
-    public string InputFile { get; set; }
+    public string? InputFile { get; set; }
 
     [Option("debug", Hidden = true)]
     public bool Debug { get; set; }

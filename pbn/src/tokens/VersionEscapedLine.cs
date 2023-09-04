@@ -5,7 +5,7 @@ namespace pbn.tokens
     public record VersionEscapedLine : EscapedLine
     {
 
-        public const string VersionLinePrefix = EscapeSequence + " " + "PBN" + " ";
+        public const string VersionLinePrefix = " " + "PBN" + " ";
 
         private string versionString;
 
@@ -18,6 +18,7 @@ namespace pbn.tokens
 
         public override void Serialize(TextWriter to)
         {
+            to.Write(EscapedLine.EscapeSequence);
             to.Write(VersionLinePrefix);
             to.Write(this.versionString);
         }
