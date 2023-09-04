@@ -30,44 +30,45 @@ public class Tags
     public const string ScoreTable = "ScoreTable";
     public const string TotalScoreTable = "TotalScoreTable";
 
+    public static readonly IReadOnlySet<string> IdentificationSectionTags = new HashSet<string>
+    {
+        Event,
+        Site,
+        Date,
+        Board,
+        West,
+        North,
+        East,
+        South,
+        Dealer,
+        Vulnerable,
+        Deal,
+        Scoring,
+        Declarer,
+        Contract,
+        Result
+    };
+
+    public static readonly IReadOnlySet<string> TableTags = new HashSet<string>
+    {
+        OptimumResultTable,
+        ActionTable,
+        AuctionTimeTable,
+        InstantScoreTable,
+        OptimumPlayTable,
+        PlayTimeTable,
+        ScoreTable,
+        TotalScoreTable
+    };
+
     public static bool IsTagRecognized(string tagname)
     {
         return IdentificationSectionTags.Contains(tagname) || TableTags.Contains(tagname);
     }
-
-    public static readonly IReadOnlySet<string> IdentificationSectionTags = new HashSet<string> {
-            Event,
-            Site,
-            Date,
-            Board,
-            West,
-            North,
-            East,
-            South,
-            Dealer,
-            Vulnerable,
-            Deal,
-            Scoring,
-            Declarer,
-            Contract,
-            Result
-        };
-
-    public static readonly IReadOnlySet<string> TableTags = new HashSet<string> {
-            OptimumResultTable,
-            ActionTable,
-            AuctionTimeTable,
-            InstantScoreTable,
-            OptimumPlayTable,
-            PlayTimeTable,
-            ScoreTable,
-            TotalScoreTable
-        };
 
 
     public static bool IsBoardScopeTag(string tagName)
     {
         return IdentificationSectionTags.Contains(tagName) || TableTags.Contains(tagName);
     }
-
 }

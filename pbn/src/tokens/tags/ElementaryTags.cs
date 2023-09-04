@@ -1,5 +1,4 @@
-﻿using System;
-using pbn.model;
+﻿using pbn.model;
 
 namespace pbn.tokens.tags;
 
@@ -21,7 +20,6 @@ namespace pbn.tokens.tags;
 (15) Result     (the result of the game)
 */
 
-
 public record BoardTag(string Value) : Tag(Tags.Board, Value)
 {
     public static string TagName => "Board";
@@ -30,92 +28,101 @@ public record BoardTag(string Value) : Tag(Tags.Board, Value)
 
 public record EventTag : Tag
 {
-    public static string TagName => "Event";
     public EventTag(string value) : base(Tags.Event, value)
     {
     }
+
+    public static string TagName => "Event";
 }
 
 public record SiteTag : Tag
 {
-    public static string TagName => "Site";
     public SiteTag(string value) : base(Tags.Site, value)
     {
     }
+
+    public static string TagName => "Site";
 }
 
 public record DateTag : Tag
 {
-    public static string TagName => "Date";
     public DateTag(string value) : base(Tags.Date, value)
     {
     }
+
+    public static string TagName => "Date";
 }
 
 public record PlayerTag : Tag
 {
-    public Position Position => PositionHelpers.FromString(Value);
     public PlayerTag(string name, string value) : base(name, value)
     {
     }
+
+    public Position Position => PositionHelpers.FromString(Value);
 }
 
 public record DealerTag : Tag
 {
-    public static string TagName => "Dealer";
-    public Position Position => PositionHelpers.FromString(this.Value);
-
     public DealerTag(string value) : base(Tags.Dealer, value)
     {
     }
+
+    public static string TagName => "Dealer";
+    public Position Position => PositionHelpers.FromString(Value);
 }
 
 public record VulnerableTag : Tag
 {
-    public static string TagName => "Vulnerable";
-    public Vulnerability Vulnerability => VulnerabilityHelpers.FromString(Value);
-    
     public VulnerableTag(string value) : base(Tags.Vulnerable, value)
     {
     }
+
+    public static string TagName => "Vulnerable";
+    public Vulnerability Vulnerability => VulnerabilityHelpers.FromString(Value);
 }
 
 public record DealTag : Tag
 {
-    public static string TagName => "Deal";
     public DealTag(string value) : base(Tags.Deal, value)
     {
     }
+
+    public static string TagName => "Deal";
 }
 
 public record ScoringTag : Tag
 {
-    public static string TagName => "Scoring";
     public ScoringTag(string value) : base(Tags.Scoring, value)
     {
     }
+
+    public static string TagName => "Scoring";
 }
 
 public record DeclarerTag : Tag
 {
-    public static string TagName => "Declarer";
     public DeclarerTag(string value) : base(Tags.Declarer, value)
     {
     }
+
+    public static string TagName => "Declarer";
 }
 
 public record ContractTag : Tag
 {
-    public static string TagName => "Contract";
     public ContractTag(string value) : base(Tags.Contract, value)
     {
     }
+
+    public static string TagName => "Contract";
 }
 
 public record ResultTag : Tag
 {
-    public static string TagName => "Result";
     public ResultTag(string value) : base(Tags.Result, value)
     {
     }
+
+    public static string TagName => "Result";
 }

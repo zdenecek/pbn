@@ -12,90 +12,6 @@ public static class DdsTypes
     public const int MAXNOOFBOARDS = 200;
     public const int MAXNOOFTABLES = 40;
 
-
-    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-    public struct ddTableDealPBN
-    {
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
-        public string cards;
-
-        public ddTableDealPBN(string cards)
-        {
-            this.cards = cards;
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct ddTableDealsPBN
-    {
-        public int noOfTables;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAXNOOFTABLES * DDS_STRAINS)] // Adjust the size as needed
-        public ddTableDealPBN[] deals;
-
-        public ddTableDealsPBN(string[] cards)
-        {
-            this.noOfTables = cards.Length;
-            this.deals = new ddTableDealPBN[MAXNOOFTABLES * DDS_STRAINS];
-            for (int i = 0; i < cards.Length; i++)
-            {
-                this.deals[i] = new ddTableDealPBN(cards[i]);
-            }
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct ddTableResults
-    {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DDS_STRAINS * DDS_HANDS)]
-        public int[] resTable;
-
-        public ddTableResults()
-        {
-            this.resTable = new int[DDS_STRAINS * DDS_HANDS];
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct ddTablesRes
-    {
-        public int noOfBoards;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAXNOOFTABLES * DDS_STRAINS)] // Adjust the size as needed
-        public ddTableResults[] results;
-
-        public ddTablesRes()
-        {
-            this.results = new ddTableResults[MAXNOOFTABLES * DDS_STRAINS];
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct parResults
-    {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2 * 16, ArraySubType = UnmanagedType.U1)]
-        public char[] parScore;
-
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2 * 128, ArraySubType = UnmanagedType.U1)]
-        public char[] parContractsString;
-
-        public parResults()
-        {
-            this.parScore = new char[2 * 16];
-            this.parContractsString = new char[2 * 128];
-        }
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct allParResults
-    {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAXNOOFTABLES)]
-        public parResults[] presults;
-
-        public allParResults()
-        {
-            this.presults = new parResults[MAXNOOFTABLES];
-        }
-    }
-
     public static int VulnerabilityToDdsMode(Vulnerability vul)
     {
         /* mode = 0: par calculation, vulnerability None
@@ -136,5 +52,88 @@ public static class DdsTypes
             Position.West => 3,
             _ => throw new ArgumentException($"Unknown position {pos}")
         };
+    }
+
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct ddTableDealPBN
+    {
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 80)]
+        public string cards;
+
+        public ddTableDealPBN(string cards)
+        {
+            this.cards = cards;
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ddTableDealsPBN
+    {
+        public int noOfTables;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAXNOOFTABLES * DDS_STRAINS)] // Adjust the size as needed
+        public ddTableDealPBN[] deals;
+
+        public ddTableDealsPBN(string[] cards)
+        {
+            noOfTables = cards.Length;
+            deals = new ddTableDealPBN[MAXNOOFTABLES * DDS_STRAINS];
+            for (var i = 0; i < cards.Length; i++) deals[i] = new ddTableDealPBN(cards[i]);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ddTableResults
+    {
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = DDS_STRAINS * DDS_HANDS)]
+        public int[] resTable;
+
+        public ddTableResults()
+        {
+            resTable = new int[DDS_STRAINS * DDS_HANDS];
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ddTablesRes
+    {
+        public int noOfBoards;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAXNOOFTABLES * DDS_STRAINS)] // Adjust the size as needed
+        public ddTableResults[] results;
+
+        public ddTablesRes()
+        {
+            results = new ddTableResults[MAXNOOFTABLES * DDS_STRAINS];
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct parResults
+    {
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2 * 16, ArraySubType = UnmanagedType.U1)]
+        public char[] parScore;
+
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2 * 128, ArraySubType = UnmanagedType.U1)]
+        public char[] parContractsString;
+
+        public parResults()
+        {
+            parScore = new char[2 * 16];
+            parContractsString = new char[2 * 128];
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct allParResults
+    {
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = MAXNOOFTABLES)]
+        public parResults[] presults;
+
+        public allParResults()
+        {
+            presults = new parResults[MAXNOOFTABLES];
+        }
     }
 }

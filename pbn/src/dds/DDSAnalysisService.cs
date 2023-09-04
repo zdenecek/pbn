@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using pbn.dds;
 using pbn.model;
 
@@ -6,7 +7,6 @@ namespace pbn.service;
 
 public class DdsAnalysisService : IAnalysisService
 {
-
     public AnalysisTable AnalyzeBoard(Board board)
     {
         var deals = new DdsTypes.ddTableDealsPBN(new[] { board.CardString });
@@ -34,6 +34,6 @@ public class DdsAnalysisService : IAnalysisService
 
     public AnalysisTable[] AnalyzeBoards(IEnumerable<Board> boards)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

@@ -6,18 +6,9 @@ using pbn.manipulators;
 
 namespace pbn;
 
-class Application
+internal class Application
 {
     public const string Version = "0.0.1";
-
-    public static Application Instance { get; }
-
-    public bool Verbose { get; set; }
-
-    private Application()
-    {
-
-    }
 
     static Application()
     {
@@ -26,9 +17,16 @@ class Application
         Instance = new Application();
     }
 
+    private Application()
+    {
+    }
+
+    public static Application Instance { get; }
+
+    public bool Verbose { get; set; }
+
     public void Run(Options options)
     {
-
         if (options.Version)
         {
             Console.WriteLine($"pbn {Version}");
@@ -78,21 +76,15 @@ class Application
         var serializer = new PbnSerializer();
 
         if (!string.IsNullOrWhiteSpace(options.Output))
-        {
             serializer.Serialize(file, options.Output);
-        }
         else if (options.Overwrite)
-        {
             serializer.Serialize(file, filename);
-        }
         else
-        {
             serializer.Serialize(file, Console.Out);
-        }
     }
 }
 
-class Options
+internal class Options
 {
     [Option('h', "help", HelpText = "Produce help message")]
     public bool Help { get; set; }
@@ -106,10 +98,11 @@ class Options
     [Option('s', "strip", HelpText = "Remove all results, site and event information")]
     public bool Strip { get; set; }
 
-    [Option('a', "analyze", Default = "x",HelpText = "Create double dummy analyses for each board")]
+    [Option('a', "analyze", Default = "x", HelpText = "Create double dummy analyses for each board")]
     public string? Analyze { get; set; }
 
-    [Value(1, MetaName = "output-file", HelpText = "Output file name, if not specified, the program will use the input file name")]
+    [Value(1, MetaName = "output-file",
+        HelpText = "Output file name, if not specified, the program will use the input file name")]
     public string? Output { get; set; }
 
     [Option('w', "overwrite", HelpText = "Overwrite the input file with output")]
@@ -121,6 +114,5 @@ class Options
     [Value(0, MetaName = "input-file", Required = true, HelpText = "Input file name")]
     public string? InputFile { get; set; }
 
-    [Option("debug", Hidden = true)]
-    public bool Debug { get; set; }
+    [Option("debug", Hidden = true)] public bool Debug { get; set; }
 }

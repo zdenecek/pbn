@@ -12,35 +12,6 @@ public record
 
     public override string Typename => "Table Tag";
 
-    
-    public record struct ColumnInfo(string Name, ColumnInfo.ColumnOrdering Ordering,
-        ColumnInfo.ColumnAlignment Alignment, int AlignmentWidth)
-    {
-        public const char LeftAlignChar = 'L';
-        public const char RightAlignChar = 'R';
-        public const char OrderingInfoSeparator = '\\';
-        public const char AscendingOrderingChar = '+';
-        public const char DescendingOrderingChar = '-';
-
-        public enum ColumnOrdering
-        {
-            Ascending,
-            Descending,
-            None
-        }
-
-        public enum ColumnAlignment
-        {
-            Left,
-            Right,
-            None
-        }
-
-        public ColumnInfo() : this("", ColumnOrdering.None, ColumnAlignment.None, 0)
-        {
-        }
-    }
-
 
     public static ColumnInfo ParseSingleColumnInfo(string info)
     {
@@ -90,15 +61,9 @@ public record
     {
         var infos = new List<ColumnInfo>();
         var infoStrs = tagContent.Split(';');
-        if (infoStrs.Length == 0)
-        {
-            throw new FormatException("Invalid column format: " + tagContent);
-        }
+        if (infoStrs.Length == 0) throw new FormatException("Invalid column format: " + tagContent);
 
-        foreach (var colInfo in infoStrs)
-        {
-            infos.Add(ParseSingleColumnInfo(colInfo));
-        }
+        foreach (var colInfo in infoStrs) infos.Add(ParseSingleColumnInfo(colInfo));
 
         var orderedColumnsCount = infos.Count(info => info.Ordering != ColumnInfo.ColumnOrdering.None);
         if (orderedColumnsCount > 1)
@@ -112,14 +77,14 @@ public record
     {
         base.Serialize(to);
         to.Write("\n");
-        foreach (var row in Values.Chunk(this.Columns.Count))
+        foreach (var row in Values.Chunk(Columns.Count))
         {
-            bool first = true;
-            foreach (  var ( item, col) in row.Zip(this.Columns))
+            var first = true;
+            foreach (var (item, col) in row.Zip(Columns))
             {
                 if (!first)
                     to.Write(' ');
-                else 
+                else
                     first = false;
                 to.Write(
                     col.Alignment switch
@@ -129,9 +94,39 @@ public record
                         ColumnInfo.ColumnAlignment.Right => item.PadRight(col.AlignmentWidth),
                         _ => throw new ArgumentOutOfRangeException()
                     }
-                    );
+                );
             }
+
             to.Write("\n");
+        }
+    }
+
+
+    public record struct ColumnInfo(string Name, ColumnInfo.ColumnOrdering Ordering,
+        ColumnInfo.ColumnAlignment Alignment, int AlignmentWidth)
+    {
+        public enum ColumnAlignment
+        {
+            Left,
+            Right,
+            None
+        }
+
+        public enum ColumnOrdering
+        {
+            Ascending,
+            Descending,
+            None
+        }
+
+        public const char LeftAlignChar = 'L';
+        public const char RightAlignChar = 'R';
+        public const char OrderingInfoSeparator = '\\';
+        public const char AscendingOrderingChar = '+';
+        public const char DescendingOrderingChar = '-';
+
+        public ColumnInfo() : this("", ColumnOrdering.None, ColumnAlignment.None, 0)
+        {
         }
     }
 }

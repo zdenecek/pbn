@@ -1,13 +1,13 @@
 using System.IO;
 
-namespace pbn.tokens
+namespace pbn.tokens;
+
+public record Tag(string Name, string Value) : SemanticPbnToken
 {
-    public record Tag(string Name, string Value) : SemanticPbnToken
-    {
-        public override string Typename => "Tag";
-        public const string TagOpeningDelimiter = "[";
-        public const string TagClosingDelimiter = "]";
-        public const string ValueDelimiter = "\"";
+    public const string TagOpeningDelimiter = "[";
+    public const string TagClosingDelimiter = "]";
+    public const string ValueDelimiter = "\"";
+    public override string Typename => "Tag";
 
     public override void Serialize(TextWriter to)
     {
@@ -19,5 +19,4 @@ namespace pbn.tokens
         to.Write(ValueDelimiter);
         to.Write(TagClosingDelimiter);
     }
-}
 }

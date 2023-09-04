@@ -1,16 +1,13 @@
 using System.IO;
 
-namespace pbn.tokens
+namespace pbn.tokens;
+
+public record EmptyLine : SemanticPbnToken
 {
-    public record EmptyLine : SemanticPbnToken
+    public override string Typename => "Empty Line";
+
+    public override void Serialize(TextWriter to)
     {
-
-        public override string Typename => "Empty Line";
-
-        public override void Serialize(TextWriter to)
-        {
-            // do nothing
-        }
-
+        // do nothing
     }
 }

@@ -8,13 +8,11 @@ public enum Suit
     Spades,
     Hearts,
     Diamonds,
-    Clubs,
+    Clubs
 }
-
 
 public static class SuitHelpers
 {
-
     public static Suit FromString(string str)
     {
         return str[0] switch
@@ -30,7 +28,6 @@ public static class SuitHelpers
 
     public static string ToString(this Suit suit)
     {
-
         return suit switch
         {
             Suit.Notrump => "No trumps",

@@ -1,21 +1,23 @@
-﻿using CommandLine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CommandLine;
 
 namespace pbn;
 
 internal class Program
 {
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
         Parser.Default.ParseArguments<Options>(args)
-          .WithParsed(RunOptions)
-          .WithNotParsed(HandleParseError);
+            .WithParsed(RunOptions)
+            .WithNotParsed(HandleParseError);
     }
-    static void RunOptions(Options opts)
+
+    private static void RunOptions(Options opts)
     {
         Application.Instance.Run(opts);
     }
-    static void HandleParseError(IEnumerable<Error> errs)
+
+    private static void HandleParseError(IEnumerable<Error> errs)
     {
         //handle errors
     }

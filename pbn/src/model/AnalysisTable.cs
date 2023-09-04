@@ -7,23 +7,8 @@ public class AnalysisTable
 {
     private readonly int[,] ddTable;
 
-    public static AnalysisTable BuildAnalysisTable(Func<Position, Suit, int> ddTable)
-    {
-        var table = new int[5, 4];
-
-        foreach (var suit in Enum.GetValues(typeof(Suit)).Cast<Suit>())
-        {
-            foreach (var position in Enum.GetValues(typeof(Position)).Cast<Position>())
-            {
-                table[(int)suit, (int)position] = ddTable(position, suit);
-            }
-        }
-
-        return new AnalysisTable(table);
-    }
-
     /// <summary>
-    /// Creates a new AnalysisTable from a double dummy table.
+    ///     Creates a new AnalysisTable from a double dummy table.
     /// </summary>
     /// <param name="ddTable">Twodimension array, first index is strain, second is position</param>
     public AnalysisTable(int[,] ddTable)
@@ -31,10 +16,19 @@ public class AnalysisTable
         this.ddTable = ddTable;
     }
 
+    public static AnalysisTable BuildAnalysisTable(Func<Position, Suit, int> ddTable)
+    {
+        var table = new int[5, 4];
+
+        foreach (var suit in Enum.GetValues(typeof(Suit)).Cast<Suit>())
+        foreach (var position in Enum.GetValues(typeof(Position)).Cast<Position>())
+            table[(int)suit, (int)position] = ddTable(position, suit);
+
+        return new AnalysisTable(table);
+    }
+
     public int GetDoubleDummyTricks(Suit suit, Position position)
     {
         return ddTable[(int)suit, (int)position];
     }
-
-
 }

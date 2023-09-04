@@ -4,6 +4,10 @@ namespace pbn.tokens;
 
 public abstract record SemanticPbnToken
 {
+    public abstract string Typename { get; }
+
+    public PbnFile.BoardContext? OwningBoardContext { get; internal set; }
+
     public override string ToString()
     {
         using MemoryStream stream = new();
@@ -13,15 +17,4 @@ public abstract record SemanticPbnToken
     }
 
     public abstract void Serialize(TextWriter to);
-
-    public abstract string Typename
-    {
-        get;
-    }
-
-    public PbnFile.BoardContext? OwningBoardContext
-    {
-        get;
-        internal set;
-    }
 }

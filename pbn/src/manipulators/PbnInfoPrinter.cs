@@ -5,20 +5,21 @@ using pbn.tokens;
 namespace pbn.manipulators;
 
 /// <summary>
-/// Used to execute the --info command.
+///     Used to execute the --info command.
 /// </summary>
-class PbnInfoPrinter
+internal class PbnInfoPrinter
 {
-
     /// <summary>
-    /// Prints the overview of the file to the given stream.
+    ///     Prints the overview of the file to the given stream.
     /// </summary>
     public static void PrintOverview(string filename, PbnFile file, TextWriter outStream)
     {
         outStream.WriteLine($"File: {filename}");
         outStream.Write("Boards: ");
         if (file.Boards.Count == 0)
+        {
             outStream.WriteLine("None");
+        }
         else
         {
             outStream.Write($"{file.Boards[0].BoardNumber} - {file.Boards.Last().BoardNumber} ");
@@ -33,7 +34,7 @@ class PbnInfoPrinter
     }
 
     /// <summary>
-    /// Tries to find generator info encoded in the Generator tag. 
+    ///     Tries to find generator info encoded in the Generator tag.
     /// </summary>
     /// <returns>Contents of the generator tag, null if no such tag is found</returns>
     public static string? GetGeneratorInfo(PbnFile file)

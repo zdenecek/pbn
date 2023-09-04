@@ -13,5 +13,4 @@ public static class DdsInterop
         int[] trumpFilter,
         ref DdsTypes.ddTablesRes resp,
         ref DdsTypes.allParResults presp);
-
 }
