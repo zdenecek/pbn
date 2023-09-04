@@ -19,4 +19,9 @@ public abstract record SemanticPbnToken
         get;
     }
 
+    public PbnFile.BoardContext? OwningBoardContext
+    {
+        get;
+        internal set;
+    }
 }
