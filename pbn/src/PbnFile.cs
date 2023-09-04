@@ -6,6 +6,7 @@ using System.Linq;
 using pbn.model;
 using pbn.tokens;
 using pbn.tokens.tags;
+using pbn.utils;
 
 namespace pbn;
 
@@ -251,9 +252,9 @@ public class PbnFile
         ///     Range in which all the context's tokens are.
         ///     Not all tokens in the range must pertain to the context.
         /// </summary>
-        internal TokenRange TokenRange { get; set; }
+        public TokenRange TokenRange { get; set; }
 
-        public int BoardNumber { get; private set; }
+        public int? BoardNumber => this.GetTag<BoardTag>(BoardTag.TagName)?.BoardNumber;
 
         /// <summary>
         ///     Returns the tokens that are part of this context.
@@ -263,7 +264,8 @@ public class PbnFile
 
         private T? GetTag<T>(string name) where T : Tag
         {
-            return tagsByName[name].FirstOrDefault() as T;
+            if (!tagsByName.ContainsKey(name)) return null;
+            return tagsByName[name]?.FirstOrDefault() as T;
         }
 
         /// <summary>
@@ -275,8 +277,7 @@ public class PbnFile
             if (token is not Tag tag) return;
             if (tag.Name == Tags.Board)
             {
-                Debug.Assert(BoardNumber == 0, "Internal error: Board number is already set.");
-                BoardNumber = int.Parse(tag.Value);
+                Debug.Assert(BoardNumber is null, "Internal error: Board number is already set.");
             }
 
             if (!tagsByName.ContainsKey(tag.Name)) tagsByName[tag.Name] = new List<Tag>();
@@ -291,12 +292,9 @@ public class PbnFile
             token.OwningBoardContext = null;
             if (token is not Tag tag) return;
 
-            if (tag is BoardTag)
+            if (tag is BoardTag && BoardNumber != null)
             {
-                if (BoardNumber != 0)
-                    throw new InvalidOperationException("Internal error: Board number cannot be changed.");
-
-                BoardNumber = 0;
+                throw new InvalidOperationException("Internal error: Board number cannot be changed.");
             }
 
             tagsByName[tag.Name].Remove(tag);
@@ -329,21 +327,35 @@ public class PbnFile
             var vulnerability = GetTag<VulnerableTag>(VulnerableTag.TagName)?.Vulnerability;
             var dealer = GetTag<DealerTag>(DealerTag.TagName)?.Position;
             var cards = GetTag<DealTag>(DealTag.TagName)?.Value;
+            var number = BoardNumber;
 
-            if (!vulnerability.HasValue || !dealer.HasValue || cards is null)
+            if (!vulnerability.HasValue || !dealer.HasValue || cards is null || !number.HasValue)
                 throw new PbnError("Cannot create board: Invalid board context ");
-
+            
             return new Board(
-                BoardNumber,
+                number.Value,
                 vulnerability.Value,
                 dealer.Value,
                 cards
             );
         }
+
+        public void AppendToken(SemanticPbnToken token)
+        {
+            pbnFile.InsertToken(this.TokenRange.EndIndex + 1, token);
+            Debug.Assert(token.OwningBoardContext == this);
+        }
+
+        public void InsertToken(SemanticPbnToken token, int atIndex)
+        {
+            var index = pbnFile.Tokens.IndexOf(this.Tokens.ElementAt(atIndex));
+            pbnFile.InsertToken(index, token);
+            Debug.Assert(token.OwningBoardContext == this);
+        }
     }
 
     /// Maps board context id to token ranges.
-    internal record struct TokenRange
+    public record struct TokenRange
     {
         /// Index of the last token in the range in the tokens list.
         public int EndOffset;

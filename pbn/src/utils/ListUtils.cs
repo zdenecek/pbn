@@ -35,4 +35,17 @@ public static class ListUtils
                 found.Add(tagName);
         return found.Count == names.Count;
     }
+
+    public static int IndexOf<T>(this IReadOnlyList<T> self, T elementToFind, int startAt = 0 )
+    {
+        int i = startAt;
+        foreach (T element in self.Skip(startAt))
+        {
+            if (Equals(element, elementToFind))
+                return i;
+            i++;
+        }
+
+        return -1;
+    }
 }
