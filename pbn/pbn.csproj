@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>library</OutputType>
@@ -8,28 +8,18 @@
         <Nullable>enable</Nullable>
         <PublishSingleFile>true</PublishSingleFile>
         <SelfContained>true</SelfContained>
+		        
+        <PlatformTarget>x64</PlatformTarget>
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="tokens\**"/>
-        <EmbeddedResource Remove="tokens\**"/>
-        <None Remove="tokens\**"/>
-    </ItemGroup>
-    
-
-    <ItemGroup>
-        <None Update="lib\dds.dll">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <Compile Remove="tokens\**" />
+        <EmbeddedResource Remove="tokens\**" />
+        <None Remove="tokens\**" />
+        <None Update="dds.dll">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
     
-
-    <ItemGroup>
-      <Content Include="..\lib\dds.dll">
-        <Link>dds.dll</Link>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
-
 
 </Project>
