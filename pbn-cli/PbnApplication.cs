@@ -7,7 +7,7 @@ using pbn.debug;
 using pbn.manipulators;
 using pbn.tokens;
 
-namespace pbn.cli;
+namespace pbn_cli;
 
 internal class Application
 {
