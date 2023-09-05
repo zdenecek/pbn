@@ -2,23 +2,16 @@
 
 PBN is a command line tool for working with Portable Bridge Notation files.
 
-Credit project (zápočtový program) for Cpp Programming course at MFF Cuni.
-
-## Used libraries
-
-PBN utilizes some libraries:
-
-- Boost::program_options
 
 ## Supported functions
 
 - parse a file and validate it
 - printing overview information about a file
 - stripping a file of unnecessary parts
+- add analysis to a file
 
 ## Features plan
 
-- creating board analyses in a file
 - exports to pdf, html
 - stricter adherence to PBN standard (currently it is not fully compliant)
   - validate
@@ -36,33 +29,9 @@ Use `--help` flag, or `-h` to see some of the options.
 
 ## Building
 
-PBN is written in C++20 and uses CMake as build system.
+PBN is written in .NET 7 and C#.
 
-### Step 0: Dependencies
-
-To build PBN, you need to configure CMake to be able to find Boost.
-
-To install Boost, see [Boost downloads section](https://www.boost.org/users/download/).
-
-Alternatively, use a package manager or Visual Studio NuGet or a compiler with Boost pre-packaged.
-
-### Step 1: Configure
-
-Create a directory where you want to build and enter it.
-
-Run CMake with the `CMakeLists.txt` file as argument:
-
-```bash
-cmake CMakeLists.txt
-```
-
-To use a different generator, you can use the `-G` flag:
-
-```bash
-cmake CMakeLists.txt -G "MinGW Makefiles"
-```
-
-### Step 2: Build
+###  Build
 
 To build, run
 
@@ -72,31 +41,22 @@ cmake --build <build dir>
 
 ## Documentation
 
-This project uses Doxygen to create documentation.
+This project uses dotnet to create documentation.
 
-To build the documentation, use the provided Doxyfile or create or own and run
+To build the documentation, run
 
 ```bash
-doxygen Doxyfile
 ```
 
-Documentation will be generated in the `docs` directory.
+Documentation will be generated in the `g` directory.
 
 ## Testing
 
-To run the tests, build the project. A second target of pbn_test should be built, simply execute it:
+To run the tests, run
 
 ```bash
-./pbn_test
+dotnet test
 ```
-
-Additionally, more options can be provided, run with help flag to see.
-
-```bash
-./pbn_test --help
-```
-
-See [Boost.Test docs](https://www.boost.org/doc/libs/1_80_0/libs/test/doc/html/index.html) for more info.
 
 ## Authors
 
