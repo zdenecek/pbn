@@ -20,7 +20,7 @@ namespace pbn.tokens.tags;
 (15) Result     (the result of the game)
 */
 
-public record BoardTag(string Value) : Tag(Tags.Board, Value)
+public record BoardTag(string Value) : Tag(TagName, Value)
 {
     public static string TagName => "Board";
     public int BoardNumber { get; init; } = int.Parse(Value);
@@ -28,7 +28,7 @@ public record BoardTag(string Value) : Tag(Tags.Board, Value)
 
 public record EventTag : Tag
 {
-    public EventTag(string value) : base(Tags.Event, value)
+    public EventTag(string value) : base(TagName, value)
     {
     }
 
@@ -37,7 +37,7 @@ public record EventTag : Tag
 
 public record SiteTag : Tag
 {
-    public SiteTag(string value) : base(Tags.Site, value)
+    public SiteTag(string value) : base(TagName, value)
     {
     }
 
@@ -46,7 +46,7 @@ public record SiteTag : Tag
 
 public record DateTag : Tag
 {
-    public DateTag(string value) : base(Tags.Date, value)
+    public DateTag(string value) : base(TagName, value)
     {
     }
 
@@ -59,12 +59,17 @@ public record PlayerTag : Tag
     {
     }
 
+    public const string West = "West";
+    public const string North = "North";
+    public const string East = "East";
+    public const string South = "South";
+    
     public Position Position => PositionHelpers.FromString(Value);
 }
 
 public record DealerTag : Tag
 {
-    public DealerTag(string value) : base(Tags.Dealer, value)
+    public DealerTag(string value) : base(TagName, value)
     {
     }
 
@@ -74,7 +79,7 @@ public record DealerTag : Tag
 
 public record VulnerableTag : Tag
 {
-    public VulnerableTag(string value) : base(Tags.Vulnerable, value)
+    public VulnerableTag(string value) : base(TagName, value)
     {
     }
 
@@ -84,7 +89,7 @@ public record VulnerableTag : Tag
 
 public record DealTag : Tag
 {
-    public DealTag(string value) : base(Tags.Deal, value)
+    public DealTag(string value) : base(TagName, value)
     {
     }
 
@@ -93,7 +98,7 @@ public record DealTag : Tag
 
 public record ScoringTag : Tag
 {
-    public ScoringTag(string value) : base(Tags.Scoring, value)
+    public ScoringTag(string value) : base(TagName, value)
     {
     }
 
@@ -102,7 +107,7 @@ public record ScoringTag : Tag
 
 public record DeclarerTag : Tag
 {
-    public DeclarerTag(string value) : base(Tags.Declarer, value)
+    public DeclarerTag(string value) : base(TagName, value)
     {
     }
 
@@ -111,7 +116,7 @@ public record DeclarerTag : Tag
 
 public record ContractTag : Tag
 {
-    public ContractTag(string value) : base(Tags.Contract, value)
+    public ContractTag(string value) : base(TagName, value)
     {
     }
 
@@ -120,7 +125,7 @@ public record ContractTag : Tag
 
 public record ResultTag : Tag
 {
-    public ResultTag(string value) : base(Tags.Result, value)
+    public ResultTag(string value) : base(TagName, value)
     {
     }
 

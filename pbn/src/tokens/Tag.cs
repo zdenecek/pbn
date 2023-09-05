@@ -19,4 +19,9 @@ public record Tag(string Name, string Value) : SemanticPbnToken
         to.Write(ValueDelimiter);
         to.Write(TagClosingDelimiter);
     }
+
+    public override string ToString()
+    {
+        return $"{Name}:{Value}";
+    }
 }

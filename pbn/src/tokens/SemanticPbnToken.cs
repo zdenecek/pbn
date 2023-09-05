@@ -2,6 +2,7 @@ using System.IO;
 
 namespace pbn.tokens;
 
+
 public abstract record SemanticPbnToken
 {
     public abstract string Typename { get; }

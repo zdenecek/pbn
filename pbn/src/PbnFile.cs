@@ -74,9 +74,9 @@ public class PbnFile
     {
         tokens.Add(token);
 
-        if (!(token is Tag tag) || !Tags.IsBoardScopeTag(tag.Name)) return;
+        if (!Tags.IsBoardScopeToken(token)) return;
 
-        var createNewBoardContext = boards.Count == 0 || !boards.Last().AcceptsToken(tag);
+        var createNewBoardContext = boards.Count == 0 || !boards.Last().AcceptsToken(token);
 
         var index = tokens.Count - 1;
 
@@ -84,13 +84,13 @@ public class PbnFile
         {
             var newBoardContext = new BoardContext(this, new TokenRange { StartIndex = index, EndOffset = 0 });
             boards.Add(newBoardContext);
-            newBoardContext.ApplyToken(tag);
+            newBoardContext.ApplyToken(token);
         }
         else
         {
             var context = boards.Last();
             context.TokenRange = context.TokenRange with { EndOffset = context.TokenRange.EndOffset + 1 };
-            context.ApplyToken(tag);
+            context.ApplyToken(token);
         }
     }
 
@@ -103,24 +103,51 @@ public class PbnFile
         if (at < 0 || at > tokens.Count)
             throw new ArgumentOutOfRangeException(nameof(at), "Insert token: Index out of range");
 
+        List<BoardContext>? newlyCreatedBoardContexts = null;
+        
         foreach (var boardContext in Boards)
         {
             var range = boardContext.TokenRange;
-            if (range.StartIndex >= at)
+            if (range.StartIndex >= at) // token is before context
             {
                 boardContext.TokenRange = range with { StartIndex = range.StartIndex + 1 };
             }
-            else if (range.EndIndex >= at)
+            else if (range.EndIndex + 1 >= at) // token is in or right after context
             {
                 boardContext.TokenRange = range with { EndOffset = range.EndOffset + 1 };
                 if (boardContext.AcceptsToken(token, at - range.StartIndex))
                 {
+                    boardContext.ApplyToken(token);
                 }
-
-                if (token is Tag tag) boardContext.ApplyToken(tag);
+                else if (Tags.IsBoardScopeToken(token) && range.EndIndex + 1 == at ) // is right after
+                {
+                    // Do nothing, check if can be attached to following context in next iteration of foreach
+                    
+                } else if (Tags.IsBoardScopeToken(token))
+                {
+                    throw new NotImplementedException("Splitting board context ranges not implemented");
+                }
+            } else if (at == range.StartIndex && Tags.IsBoardScopeToken(token) && token.OwningBoardContext == null)
+            {
+                if (boardContext.AcceptsToken(token, atIndex: 0))
+                {
+                    boardContext.ApplyToken(token);
+                }
+                else
+                {
+                    newlyCreatedBoardContexts ??= new List<BoardContext>();
+                    newlyCreatedBoardContexts.Add(new BoardContext(this, new TokenRange
+                    {
+                        StartIndex = at,
+                        EndOffset = 0,
+                    }));
+                }
             }
         }
 
+        if(newlyCreatedBoardContexts is not null)
+            boards.AddRange(newlyCreatedBoardContexts);
+        
         tokens.Insert(at, token);
     }
 
@@ -265,7 +292,7 @@ public class PbnFile
         private T? GetTag<T>(string name) where T : Tag
         {
             if (!tagsByName.ContainsKey(name)) return null;
-            return tagsByName[name]?.FirstOrDefault() as T;
+            return tagsByName[name].FirstOrDefault() as T;
         }
 
         /// <summary>
@@ -275,7 +302,7 @@ public class PbnFile
         {
             token.OwningBoardContext = this;
             if (token is not Tag tag) return;
-            if (tag.Name == Tags.Board)
+            if (tag is BoardTag)
             {
                 Debug.Assert(BoardNumber is null, "Internal error: Board number is already set.");
             }

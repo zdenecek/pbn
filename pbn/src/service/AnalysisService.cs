@@ -7,5 +7,5 @@ public interface IAnalysisService
 {
     AnalysisTable AnalyzeBoard(Board board);
 
-    AnalysisTable[] AnalyzeBoards(IEnumerable<Board> boards);
+    IList<AnalysisTable> AnalyzeBoards(IList<Board> boards);
 }

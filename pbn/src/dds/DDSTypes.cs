@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using pbn.model;
 
@@ -122,6 +123,38 @@ public static class DdsTypes
         {
             parScore = new char[2 * 16];
             parContractsString = new char[2 * 128];
+        }
+        
+        public string ParScoreString => new(parScore);
+        public string ParContractsString => new(parContractsString);
+
+        public Contract GetParContract(Position dealer)
+        {
+            // NS:NS 4Dx\0...\0EW:NS 4Dx\0...
+            var str = dealer.IsNS() ? this.ParContractsString[..128]  : this.ParContractsString[128..256];
+            var contractStr = string.Concat(str.SkipWhile(c => c != ' ').Skip(1).TakeWhile(c => c != '\0'));
+
+            var declarerLetter = str[3];
+            
+            var level = int.Parse(contractStr[..1]);
+            var suit = SuitHelpers.FromLetter(contractStr.SkipWhile(c => Char.IsDigit(c)).First());
+            
+            var state = contractStr.Contains("xx") ? ContractDoubleState.Redoubled : contractStr.Contains("x") ? ContractDoubleState.Doubled : ContractDoubleState.NotDoubled;
+            
+           
+            var declarer = PositionHelpers.FromLetter(declarerLetter);
+            
+            return new Contract(level, suit, declarer, state);
+        }
+
+        public int GetParScore(Position dealer)
+        {
+                // str in format: NS -300\0\0\0\0...\0EW 300\0\0\0\0...\0       
+                var str = dealer.IsNS() ? this.ParScoreString[..16]  : this.ParScoreString[16..32];
+                str = string.Concat(str.Skip(3).TakeWhile(c => c != '\0'));
+                var result =  int.Parse(str);
+                if (!dealer.IsNS()) result *= -1;
+                return result;
         }
     }
 

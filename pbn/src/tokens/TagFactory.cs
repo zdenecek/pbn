@@ -21,26 +21,26 @@ public class TagFactory
         return this;
     }
 
-    public static TagFactory Default()
+    public static TagFactory MakeDefault()
     {
         var factory = new TagFactory();
 
 
-        factory.RegisterTagFactoryMethod(Tags.Event, (_, tagContent) => new EventTag(tagContent))
-            .RegisterTagFactoryMethod(Tags.Site, (_, tagContent) => new SiteTag(tagContent))
-            .RegisterTagFactoryMethod(Tags.Date, (_, tagContent) => new DateTag(tagContent))
-            .RegisterTagFactoryMethod(Tags.Board, (_, tagContent) => new BoardTag(tagContent))
-            .RegisterTagFactoryMethod(Tags.West, (name, tagContent) => new PlayerTag(name, tagContent))
-            .RegisterTagFactoryMethod(Tags.North, (name, tagContent) => new PlayerTag(name, tagContent))
-            .RegisterTagFactoryMethod(Tags.East, (name, tagContent) => new PlayerTag(name, tagContent))
-            .RegisterTagFactoryMethod(Tags.South, (name, tagContent) => new PlayerTag(name, tagContent))
-            .RegisterTagFactoryMethod(Tags.Dealer, (_, tagContent) => new DealerTag(tagContent))
-            .RegisterTagFactoryMethod(Tags.Vulnerable, (_, tagContent) => new VulnerableTag(tagContent))
-            .RegisterTagFactoryMethod(Tags.Deal, (_, tagContent) => new DealTag(tagContent))
-            .RegisterTagFactoryMethod(Tags.Scoring, (_, tagContent) => new ScoringTag(tagContent))
-            .RegisterTagFactoryMethod(Tags.Declarer, (_, tagContent) => new DeclarerTag(tagContent))
-            .RegisterTagFactoryMethod(Tags.Contract, (_, tagContent) => new ContractTag(tagContent))
-            .RegisterTagFactoryMethod(Tags.Result, (_, tagContent) => new ResultTag(tagContent));
+        factory.RegisterTagFactoryMethod(EventTag.TagName, (_, tagContent) => new EventTag(tagContent))
+            .RegisterTagFactoryMethod(SiteTag.TagName, (_, tagContent) => new SiteTag(tagContent))
+            .RegisterTagFactoryMethod(DateTag.TagName, (_, tagContent) => new DateTag(tagContent))
+            .RegisterTagFactoryMethod(BoardTag.TagName, (_, tagContent) => new BoardTag(tagContent))
+            .RegisterTagFactoryMethod(PlayerTag.West, (name, tagContent) => new PlayerTag(name, tagContent))
+            .RegisterTagFactoryMethod(PlayerTag.North, (name, tagContent) => new PlayerTag(name, tagContent))
+            .RegisterTagFactoryMethod(PlayerTag.East, (name, tagContent) => new PlayerTag(name, tagContent))
+            .RegisterTagFactoryMethod(PlayerTag.South, (name, tagContent) => new PlayerTag(name, tagContent))
+            .RegisterTagFactoryMethod(DealerTag.TagName, (_, tagContent) => new DealerTag(tagContent))
+            .RegisterTagFactoryMethod(VulnerableTag.TagName, (_, tagContent) => new VulnerableTag(tagContent))
+            .RegisterTagFactoryMethod(DealTag.TagName, (_, tagContent) => new DealTag(tagContent))
+            .RegisterTagFactoryMethod(ScoringTag.TagName, (_, tagContent) => new ScoringTag(tagContent))
+            .RegisterTagFactoryMethod(DeclarerTag.TagName, (_, tagContent) => new DeclarerTag(tagContent))
+            .RegisterTagFactoryMethod(ContractTag.TagName, (_, tagContent) => new ContractTag(tagContent))
+            .RegisterTagFactoryMethod(ResultTag.TagName, (_, tagContent) => new ResultTag(tagContent));
 
 
         return factory;

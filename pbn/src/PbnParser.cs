@@ -36,7 +36,7 @@ public class PbnParser
     private readonly char[] whiteSpaceCharacters = " \t\n\v\f\r".ToCharArray();
     private int currentLine;
 
-    public PbnParser() : this(RecoveryMode.Strict, TagFactory.Default())
+    public PbnParser() : this(RecoveryMode.Strict, TagFactory.MakeDefault())
     {
     }
 

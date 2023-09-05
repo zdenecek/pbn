@@ -1,24 +1,10 @@
 using System.Collections.Generic;
+using pbn.tokens.tags;
 
 namespace pbn.tokens;
 
-public class Tags
+public static class Tags
 {
-    public const string Event = "Event";
-    public const string Site = "Site";
-    public const string Date = "Date";
-    public const string Board = "Board";
-    public const string West = "West";
-    public const string North = "North";
-    public const string East = "East";
-    public const string South = "South";
-    public const string Dealer = "Dealer";
-    public const string Vulnerable = "Vulnerable";
-    public const string Deal = "Deal";
-    public const string Scoring = "Scoring";
-    public const string Declarer = "Declarer";
-    public const string Contract = "Contract";
-    public const string Result = "Result";
     public const string DoubleDummyTricks = "DoubleDummyTricks";
     public const string OptimumScore = "OptimumScore";
     public const string OptimumResultTable = "OptimumResultTable";
@@ -32,21 +18,21 @@ public class Tags
 
     public static readonly IReadOnlySet<string> IdentificationSectionTags = new HashSet<string>
     {
-        Event,
-        Site,
-        Date,
-        Board,
-        West,
-        North,
-        East,
-        South,
-        Dealer,
-        Vulnerable,
-        Deal,
-        Scoring,
-        Declarer,
-        Contract,
-        Result
+        EventTag.TagName,
+        SiteTag.TagName,
+        DateTag.TagName,
+        BoardTag.TagName,
+        PlayerTag.North,
+        PlayerTag.East,
+        PlayerTag.South,
+        PlayerTag.West,
+        DealerTag.TagName,
+        VulnerableTag.TagName,
+        DealTag.TagName,
+        ScoringTag.TagName,
+        DeclarerTag.TagName,
+        ContractTag.TagName,
+        ResultTag.TagName,
     };
 
     public static readonly IReadOnlySet<string> TableTags = new HashSet<string>
@@ -61,14 +47,15 @@ public class Tags
         TotalScoreTable
     };
 
-    public static bool IsTagRecognized(string tagname)
+    public static bool IsTagRecognized(string tagName)
     {
-        return IdentificationSectionTags.Contains(tagname) || TableTags.Contains(tagname);
+        return IdentificationSectionTags.Contains(tagName) || TableTags.Contains(tagName);
     }
 
 
-    public static bool IsBoardScopeTag(string tagName)
+    public static bool IsBoardScopeToken(SemanticPbnToken token)
     {
-        return IdentificationSectionTags.Contains(tagName) || TableTags.Contains(tagName);
+        if (token is not Tag tag) return false;
+        return IdentificationSectionTags.Contains(tag.Name) || TableTags.Contains(tag.Name);
     }
 }

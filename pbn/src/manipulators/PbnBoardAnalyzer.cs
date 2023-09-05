@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using pbn.model;
 using pbn.service;
+using pbn.tokens;
 using pbn.utils;
 
 namespace pbn.manipulators;
@@ -43,10 +45,12 @@ public class PbnBoardAnalyzer
     private static readonly HashSet<string> AbilityAnalysisTokenNames = new() { "Minimax", "Ability" };
 
     private readonly IAnalysisService analysisService;
+    private readonly TagFactory tagFactory;
 
-    public PbnBoardAnalyzer(DdsAnalysisService analysisService)
+    public PbnBoardAnalyzer(DdsAnalysisService analysisService, TagFactory tagFactory)
     {
         this.analysisService = analysisService;
+        this.tagFactory = tagFactory;
     }
 
     private HashSet<string> GetAnalysisTagNames(AnalysisType type)
@@ -79,15 +83,52 @@ public class PbnBoardAnalyzer
 
     private void AddAnalyses(PbnFile file, List<PbnFile.BoardContext> boardContexts)
     {
-        var boards = boardContexts.Cast<Board>();
+        var boards = boardContexts.Select(context => context.AsBoard()).ToList();
         var tables = analysisService.AnalyzeBoards(boards);
 
         foreach (var (context, analysisTable) in boardContexts.Zip(tables))
         {
+            var tokens = CreateAnalysisTokens(analysisTable);
+            foreach (var token in tokens)
+            {
+                context.AppendToken(token);
+            }
         }
     }
 
-    public void PurgeAnalysesTokens(PbnFile file, AnalysisType type)
+    private IEnumerable<SemanticPbnToken> CreateAnalysisTokens(AnalysisTable table)
+    {
+        // [Ability "N:34425 E:A98B7 S:34425 W:A98B7"]
+        var tokenString = new StringBuilder();
+        foreach (var position in new [] { Position.North , Position.East, Position.South, Position.West})
+        {
+            if(position != Position.North) tokenString.Append(' ');    
+            tokenString.Append(position.ToLetter()).Append(':');
+            foreach (var suit in new[] { Suit.Notrump, Suit.Spades, Suit.Hearts, Suit.Diamonds, Suit.Clubs })
+            {
+                var value = table.GetDoubleDummyTricks(suit, position);
+                tokenString.Append(value.ToString("X"));
+            }
+        }
+
+        var abilityTag = tagFactory.CreateTag("Ability", tokenString.ToString());
+
+        tokenString = new StringBuilder();
+
+        // [Minimax "3NW-430"]
+
+        tokenString.Append(table.MinimaxContract.Level);
+        tokenString.Append(table.MinimaxContract.Suit.ToLetter());
+        tokenString.Append(table.MinimaxContract.Declarer.ToLetter());
+        tokenString.Append(table.MinimaxScore);
+
+        var minimaxTag = tagFactory.CreateTag("Minimax", tokenString.ToString());
+
+        return new [] {abilityTag, minimaxTag};
+    }
+    
+
+    private void PurgeAnalysesTokens(PbnFile file, AnalysisType type)
     {
         var names = GetAnalysisTagNames(type);
         var toDelete = file.Tokens.GetAllTagsByNames(names);
@@ -95,7 +136,7 @@ public class PbnBoardAnalyzer
         foreach (var tag in toDelete) file.DeleteToken(tag);
     }
 
-    public void PurgeAnalysesTokens(PbnFile file, PbnFile.BoardContext context, AnalysisType type)
+    private void PurgeAnalysesTokens(PbnFile file, PbnFile.BoardContext context, AnalysisType type)
     {
         var names = GetAnalysisTagNames(type);
         var toDelete = context.Tokens.GetAllTagsByNames(names);
@@ -104,7 +145,7 @@ public class PbnBoardAnalyzer
     }
 
 
-    public bool HasAnalysis(PbnFile.BoardContext context, AnalysisType type)
+    private bool HasAnalysis(PbnFile.BoardContext context, AnalysisType type)
     {
         var names = GetAnalysisTagNames(type);
         return context.Tokens.GetAllTagsByNames(names).Any();

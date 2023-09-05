@@ -3,6 +3,8 @@ using System.IO;
 using CommandLine;
 using pbn.debug;
 using pbn.manipulators;
+using pbn.service;
+using pbn.tokens;
 
 namespace pbn;
 
@@ -50,7 +52,8 @@ internal class Application
     private void HandleFile(string filename, Options options)
     {
         using var inputFile = new StreamReader(filename);
-        var parser = new PbnParser();
+        var tagFactory = TagFactory.MakeDefault();
+        var parser = new PbnParser(PbnParser.RecoveryMode.Strict, tagFactory);
         var file = parser.Parse(inputFile);
 
         if (options.Debug)
@@ -71,6 +74,13 @@ internal class Application
         {
             var stripper = new PbnStripper();
             stripper.Strip(file);
+        }
+
+        if (options.Analyze)
+        {
+            var service = new DdsAnalysisService();
+            var analyzer = new PbnBoardAnalyzer(service, tagFactory);
+            analyzer.AddAnalyses(file);
         }
 
         var serializer = new PbnSerializer();
@@ -98,8 +108,8 @@ internal class Options
     [Option('s', "strip", HelpText = "Remove all results, site and event information")]
     public bool Strip { get; set; }
 
-    [Option('a', "analyze", Default = "x", HelpText = "Create double dummy analyses for each board")]
-    public string? Analyze { get; set; }
+    [Option('a', "analyze", HelpText = "Create double dummy analyses for each board")]
+    public bool Analyze { get; set; }
 
     [Value(1, MetaName = "output-file",
         HelpText = "Output file name, if not specified, the program will use the input file name")]
