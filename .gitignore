@@ -20,6 +20,7 @@ mono_crash.*
 
 # Build results
 [Dd]ebug/
+!pbn/src/debug
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
