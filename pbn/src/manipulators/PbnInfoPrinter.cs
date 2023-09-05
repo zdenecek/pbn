@@ -7,7 +7,7 @@ namespace pbn.manipulators;
 /// <summary>
 ///     Used to execute the --info command.
 /// </summary>
-internal class PbnInfoPrinter
+public class PbnInfoPrinter
 {
     /// <summary>
     ///     Prints the overview of the file to the given stream.

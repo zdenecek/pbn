@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
+        <OutputType>library</OutputType>
         <TargetFramework>net7.0</TargetFramework>
         <RootNamespace>pbn</RootNamespace>
         <ImplicitUsings>disable</ImplicitUsings>
@@ -15,10 +15,7 @@
         <EmbeddedResource Remove="tokens\**"/>
         <None Remove="tokens\**"/>
     </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="CommandLineParser" Version="2.9.1"/>
-    </ItemGroup>
+    
 
     <ItemGroup>
         <None Update="lib\dds.dll">
@@ -26,8 +23,5 @@
         </None>
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="src\program\"/>
-    </ItemGroup>
 
 </Project>

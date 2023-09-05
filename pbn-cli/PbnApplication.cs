@@ -1,12 +1,13 @@
 using System;
 using System.IO;
 using CommandLine;
+using pbn;
 using pbn.dds;
 using pbn.debug;
 using pbn.manipulators;
 using pbn.tokens;
 
-namespace pbn;
+namespace pbn.cli;
 
 internal class Application
 {

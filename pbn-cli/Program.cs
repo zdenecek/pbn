@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using CommandLine;
+using pbn.cli;
 
-namespace pbn;
+namespace pbn_cli;
 
 internal class Program
 {
