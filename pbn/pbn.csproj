@@ -22,6 +22,14 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
+    
+
+    <ItemGroup>
+      <Content Include="..\lib\dds.dll">
+        <Link>dds.dll</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
 
 
 </Project>
