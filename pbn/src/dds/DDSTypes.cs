@@ -131,7 +131,7 @@ public static class DdsTypes
         public Contract GetParContract(Position dealer)
         {
             // NS:NS 4Dx\0...\0EW:NS 4Dx\0...
-            var str = dealer.IsNS() ? this.ParContractsString[..128]  : this.ParContractsString[128..256];
+            var str = dealer.IsNs() ? this.ParContractsString[..128]  : this.ParContractsString[128..256];
             var contractStr = string.Concat(str.SkipWhile(c => c != ' ').Skip(1).TakeWhile(c => c != '\0'));
 
             var declarerLetter = str[3];
@@ -150,10 +150,10 @@ public static class DdsTypes
         public int GetParScore(Position dealer)
         {
                 // str in format: NS -300\0\0\0\0...\0EW 300\0\0\0\0...\0       
-                var str = dealer.IsNS() ? this.ParScoreString[..16]  : this.ParScoreString[16..32];
+                var str = dealer.IsNs() ? this.ParScoreString[..16]  : this.ParScoreString[16..32];
                 str = string.Concat(str.Skip(3).TakeWhile(c => c != '\0'));
                 var result =  int.Parse(str);
-                if (!dealer.IsNS()) result *= -1;
+                if (!dealer.IsNs()) result *= -1;
                 return result;
         }
     }

@@ -51,7 +51,7 @@ public class PbnParser
 
     public RecoveryMode Mode { get; init; }
 
-    private string? Getline(StreamReader inputStream)
+    private string? GetLine(StreamReader inputStream)
     {
         currentLine++;
         return inputStream.ReadLine();
@@ -61,20 +61,28 @@ public class PbnParser
     {
         var values = new List<string>();
 
-        if (line.Length == 0 && (line = Getline(inputStream)) == null)
-            return values;
+
+        if (line.Length == 0)
+        {
+            var newLine = GetLine(inputStream);
+            if (newLine == null)
+                return values;
+            line = newLine;
+        }
 
         while (!(line.StartsWith("[") || line.Length == 0 ||
                  line.StartsWith(SinglelineCommentaryStartSequence)))
         {
             var newValues = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             values.AddRange(newValues);
-            line = Getline(inputStream)?.Trim();
-            if (line == null)
+            var newLine = GetLine(inputStream)?.Trim();
+            if (newLine == null)
             {
                 line = "";
                 break;
             }
+            else
+                line = newLine;
         }
 
         return values;
@@ -158,8 +166,7 @@ public class PbnParser
         while (line.IndexOf('}') == -1)
         {
             content += line + "\n";
-            if ((line = Getline(inputStream)) == null)
-                throw new InvalidOperationException("Multiline comment not closed at line " + lineno);
+            line = GetLine(inputStream) ?? throw new InvalidOperationException("Multiline comment not closed at line " + lineno);
         }
 
         var end = line.IndexOf("}", StringComparison.Ordinal);

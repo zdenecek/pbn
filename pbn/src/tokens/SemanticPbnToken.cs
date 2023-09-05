@@ -6,6 +6,8 @@ namespace pbn.tokens;
 public abstract record SemanticPbnToken
 {
     public abstract string Typename { get; }
+    
+    public int? OriginLine { get; internal set; }
 
     public PbnFile.BoardContext? OwningBoardContext { get; internal set; }
 

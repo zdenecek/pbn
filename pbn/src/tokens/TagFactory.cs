@@ -46,12 +46,16 @@ public class TagFactory
         return factory;
     }
 
-    public Tag CreateTag(string tagName, string tagContent)
+    public Tag CreateTag(string tagName, string tagContent, int? lineNumber = null)
     {
-        if (stringFactories.ContainsKey(tagName))
-            return stringFactories[tagName].Invoke(tagName, tagContent);
+        Tag tag;
+        if (stringFactories.TryGetValue(tagName, out var factory))
+            tag = factory.Invoke(tagName, tagContent);
+        else
+            tag = defaultFactory(tagName, tagContent);
 
-        return defaultFactory(tagName, tagContent);
+        tag.OriginLine = lineNumber;
+        return tag;
     }
 
     public bool IsTableTag(string tagName)
@@ -59,8 +63,12 @@ public class TagFactory
         return Tags.TableTags.Contains(tagName);
     }
 
-    public TableTag CreateTableTag(string tagName, string tagContent, List<string> values)
+    public TableTag CreateTableTag(string tagName, string tagContent, List<string> values, int? lineNumber = null)
     {
-        return new TableTag(tagName, tagContent, values);
+        var tag =  new TableTag(tagName, tagContent, values)
+        {
+            OriginLine = lineNumber
+        };
+        return tag;
     }
 }

@@ -59,8 +59,13 @@ public static class PositionHelpers
         return new[] { Position.North, Position.East, Position.South, Position.West };
     }
 
-    public static bool IsNS(this Position position)
+    public static bool IsNs(this Position position)
     {
         return position == Position.North || position == Position.South;
+    }
+    
+    public static bool IsEw(this Position position)
+    {
+        return position == Position.East || position == Position.West;
     }
 }

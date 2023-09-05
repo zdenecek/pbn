@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using pbn.dds;
 using pbn.model;
 using pbn.service;
 using pbn.tokens;
@@ -32,7 +33,7 @@ public class PbnBoardAnalyzer
         ///         <item> DoubleDummyTricks </item>
         ///     </list>
         ///     Does not contain information about minimax contract, only score, so it cannot be used to generate
-        ///     <see cref="DeepFinesseAnalysis" /> like syntax.
+        ///     <see cref="AbilityAnalysis" /> like syntax.
         ///     See bridgecomposer.pbn file for example.
         ///     Note that BridgeComposer generated file is usually bloated.
         /// </summary>
@@ -78,10 +79,10 @@ public class PbnBoardAnalyzer
             toBeAnalyzed.Add(board);
         }
 
-        AddAnalyses(file, toBeAnalyzed);
+        AddAnalyses(toBeAnalyzed);
     }
 
-    private void AddAnalyses(PbnFile file, List<PbnFile.BoardContext> boardContexts)
+    private void AddAnalyses(List<PbnFile.BoardContext> boardContexts)
     {
         var boards = boardContexts.Select(context => context.AsBoard()).ToList();
         var tables = analysisService.AnalyzeBoards(boards);

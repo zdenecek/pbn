@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using pbn.dds;
 using pbn.model;
+using pbn.service;
 
-namespace pbn.service;
+namespace pbn.dds;
 
 public class DdsAnalysisService : IAnalysisService
 {
