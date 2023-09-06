@@ -8,7 +8,7 @@ namespace pbn.debug;
 public static class DebugUtils
 {
     /// <summary>
-    ///     Serializes a PbnFile to an output stream including token type names.
+    ///     Serializes a PbnFile to an output stream including token type names and indexes.
     /// </summary>
     /// <param name="file">File to serialize.</param>
     /// <param name="outStream">Stream to serialize the file to.</param>

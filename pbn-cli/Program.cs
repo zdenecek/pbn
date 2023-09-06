@@ -3,7 +3,7 @@ using CommandLine;
 
 namespace pbn_cli;
 
-internal class Program
+internal static class Program
 {
     private static void Main(string[] args)
     {
@@ -19,6 +19,6 @@ internal class Program
 
     private static void HandleParseError(IEnumerable<Error> errs)
     {
-        //handle errors
+        // do nothing
     }
 }

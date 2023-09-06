@@ -11,29 +11,31 @@ namespace pbn;
 public class PbnParser
 {
     /// Represents the recovery mode of the parser, what it should do when a lexical or syntactical error is encountered
-    /// @see PbnParser::PbnParser(RecoveryMode mode)
     /// Only strict mode is supported at the moment
     public enum RecoveryMode
     {
-        /**
-         * Strict mode. If the parser encounters an error, it will throw an exception.
-         */
+        
+         /// Strict mode. If the parser encounters an error, it will throw an exception.
+         
         Strict,
 
-        /**
-         * Relaxed mode, if an error is encountered, the parser will try to recover and parse next tag.
-         */
+        
+        /// Relaxed mode, if an error is encountered, the parser will try to recover and parse next tag.
+        
         SkipToNextTag,
 
-        /**
-         * Relaxed mode, if an error is encountered, the parser will try to recover and parse next board.
-         * If there is no board context and an error is encountered, parser will try to skip and parse next tag.
-         */
+        
+        /// Relaxed mode, if an error is encountered, the parser will try to recover and parse next board.
+         /// If there is no board context and an error is encountered, parser will try to skip and parse next tag.
+         
         SkipToNextBoard
     }
 
     private readonly TagFactory tagFactory;
     private readonly char[] whiteSpaceCharacters = " \t\n\v\f\r".ToCharArray();
+    /// <summary>
+    /// Line counter
+    /// </summary>
     private int currentLine;
 
     public PbnParser() : this(RecoveryMode.Strict, TagFactory.MakeDefault())
@@ -57,7 +59,7 @@ public class PbnParser
         return inputStream.ReadLine();
     }
 
-    public List<string> GetTableValues(ref string line, StreamReader inputStream)
+    private List<string> GetTableValues(ref string line, StreamReader inputStream)
     {
         var values = new List<string>();
 
@@ -156,7 +158,7 @@ public class PbnParser
         return tag;
     }
 
-    public Commentary ParseMultilineComment(ref string line, ref StreamReader inputStream, bool startedOnNewLine)
+    private Commentary ParseMultilineComment(ref string line, ref StreamReader inputStream, bool startedOnNewLine)
     {
         var start = line.IndexOf('{');
         var lineno = currentLine;
@@ -180,7 +182,11 @@ public class PbnParser
 
         return token;
     }
-
+    
+    
+    /// <summary>
+    /// Parses a PBN file from an input stream.
+    /// </summary>
     public PbnFile Parse(StreamReader inputStream)
     {
         var file = new PbnFile();

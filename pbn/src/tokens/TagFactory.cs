@@ -6,6 +6,9 @@ namespace pbn.tokens;
 
 using TagFactoryMethod = Func<string, string, Tag>;
 
+/// <summary>
+/// Factory for creating tags, instantiates the correct tag type based on the tag name.
+/// </summary>
 public class TagFactory
 {
     private readonly TagFactoryMethod defaultFactory = (name, content) => new Tag(name, content);

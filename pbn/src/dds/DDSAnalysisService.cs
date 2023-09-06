@@ -5,6 +5,9 @@ using pbn.service;
 
 namespace pbn.dds;
 
+/// <summary>
+/// Analysis service using DDS library.
+/// </summary>
 public class DdsAnalysisService : IAnalysisService
 {
     public AnalysisTable AnalyzeBoard(Board board)
@@ -31,9 +34,6 @@ public class DdsAnalysisService : IAnalysisService
         // DDS does not support vulnerability parametrization for each board separately.
         // We run analysis for each vulnerability separately.
 
-        // return boards.Select(
-        //     this.AnalyzeBoard).ToList();
-
         var byVul = boards.Select((board, index) => new
             {
                 Board = board,
@@ -56,6 +56,7 @@ public class DdsAnalysisService : IAnalysisService
     }
 
     /// <summary>
+    /// Run analysis for a list of boards given a vulnerability.
     /// DDS does not support vulnerability parametrization for each board separately.
     /// </summary>
     private AnalysisTable[] AnalyzeBoardsGivenVulnerability(IList<Board> boards, Vulnerability vulnerability)
@@ -85,8 +86,11 @@ public class DdsAnalysisService : IAnalysisService
 
         return res;
     }
-
-    private static AnalysisTable BuildAnalysisTable(DdsTypes.ddTablesRes tables, DdsTypes.allParResults parResults,  int i, Position dealer)
+    
+    /// <summary>
+    /// Converts DDS Output to <see cref="AnalysisTable"/>
+    /// </summary>
+    private static AnalysisTable BuildAnalysisTable(DdsTypes.ddTablesRes tables, DdsTypes.allParResults parResults, int i, Position dealer)
     {
         return AnalysisTable.BuildAnalysisTable(
             (pos, suit) =>

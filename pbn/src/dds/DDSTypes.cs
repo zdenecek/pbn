@@ -2,9 +2,15 @@
 using System.Linq;
 using System.Runtime.InteropServices;
 using pbn.model;
+// Naming reflects the original C code in dds
+// ReSharper disable InconsistentNaming
 
 namespace pbn.dds;
 
+/// <summary>
+/// Encapsulates DDS types and constants.
+/// See DDS docs for details.
+/// </summary>
 public static class DdsTypes
 {
     public const int DDS_HANDS = 4;
@@ -12,7 +18,8 @@ public static class DdsTypes
     public const int DDS_STRAINS = 5;
     public const int MAXNOOFBOARDS = 200;
     public const int MAXNOOFTABLES = 40;
-
+    
+    /// Converts <see cref="Vulnerability"/> to DDS mode number.
     public static int VulnerabilityToDdsMode(Vulnerability vul)
     {
         /* mode = 0: par calculation, vulnerability None
@@ -30,6 +37,7 @@ public static class DdsTypes
         };
     }
 
+    /// Converts <see cref="Suit"/> to DDS strain number.
     public static int SuitToDdsStrain(Suit suit)
     {
         return suit switch
@@ -43,6 +51,7 @@ public static class DdsTypes
         };
     }
 
+    /// Converts <see cref="Position"/> to DDS position number.
     public static int PositionToDdsPos(Position pos)
     {
         return pos switch
@@ -125,9 +134,27 @@ public static class DdsTypes
             parContractsString = new char[2 * 128];
         }
         
+        /// <summary>
+        /// Par score in format: NS -300\0\0\0\0...\0EW 300\0\0\0\0...\0
+        /// First 16 chars are score if NS deals, second 16 chars are score if EW deals
+        /// The score is from the perspective of the dealer
+        /// Example: NS can make game 400 with no better sacrifice, then in first 16 chars there is +400
+        /// in second part there is EW -400.
+        /// Length is 32 chars, empty space is filled with \0.
+        /// </summary>
         public string ParScoreString => new(parScore);
+        
+        /// <summary>
+        /// Par contracts as string in following dds produced format:
+        /// NS:NS 4Dx\0...\0EW:NS 4Dx\0...\
+        /// First 128 chars are best contracts if NS deals, second 128 chars are best contracts if EW deals
+        /// Total length is 256 chars, empty space is filled with \0.
+        /// </summary>
         public string ParContractsString => new(parContractsString);
-
+        
+        /// <summary>
+        /// Return the par contract for the given dealer.
+        /// </summary>
         public Contract GetParContract(Position dealer)
         {
             // NS:NS 4Dx\0...\0EW:NS 4Dx\0...
@@ -147,6 +174,9 @@ public static class DdsTypes
             return new Contract(level, suit, declarer, state);
         }
 
+        /// <summary>
+        /// Return the par score for the given dealer.
+        /// </summary>
         public int GetParScore(Position dealer)
         {
                 // str in format: NS -300\0\0\0\0...\0EW 300\0\0\0\0...\0       

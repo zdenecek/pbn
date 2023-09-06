@@ -9,7 +9,7 @@ public class PbnFileTests
     [TestMethod]
     public void TestAppendToken()
     {
-        PbnFile file = new PbnFile();
+        var file = new PbnFile();
         var token = new EmptyLine();
         file.AppendToken(token);
         Assert.AreEqual(1, file.Tokens.Count);
@@ -18,10 +18,10 @@ public class PbnFileTests
     [TestMethod]
     public void TestInsertToken()
     {
-        PbnFile file = new PbnFile();
-        Commentary token1 = new Commentary("Hello comment");
-        EmptyLine token2 = new EmptyLine();
-        Tag token3 = new Tag("My tag", "3");
+        var file = new PbnFile();
+        var token1 = new Commentary("Hello comment");
+        var token2 = new EmptyLine();
+        var token3 = new Tag("My tag", "3");
         file.AppendToken(token1);
         file.AppendToken(token3);
         file.InsertToken(1, token2);
@@ -31,9 +31,9 @@ public class PbnFileTests
     [TestMethod]
     public void TestDeleteTokenAt()
     {
-        PbnFile file = new PbnFile();
-        Tag token1 = new Tag("My tag", "1");
-        EmptyLine token2 = new EmptyLine();
+        var file = new PbnFile();
+        var token1 = new Tag("My tag", "1");
+        var token2 = new EmptyLine();
         file.AppendToken(token1);
         file.AppendToken(token2);
         file.DeleteTokenAt(0);
@@ -43,10 +43,10 @@ public class PbnFileTests
     [TestMethod]
     public void TestReplaceToken()
     {
-        PbnFile file = new PbnFile();
-        CustomEscapedLine token1 = new CustomEscapedLine("Mycrypticline");
-        Commentary token2 = new Commentary("Hello comment \n twice as many lines");
-        Tag token3 = new Tag("MyTag", "values");
+        var file = new PbnFile();
+        var token1 = new CustomEscapedLine("Mycrypticline");
+        var token2 = new Commentary("Hello comment \n twice as many lines");
+        var token3 = new Tag("MyTag", "values");
         file.AppendToken(token1);
         file.AppendToken(token2);
         file.ReplaceToken(1, token3);
@@ -56,9 +56,9 @@ public class PbnFileTests
     [TestMethod]
     public void TestDeleteTokenByReference()
     {
-        PbnFile file = new PbnFile();
-        Tag token1 = new Tag("MyTag", "values");
-        EmptyLine token2 = new EmptyLine();
+        var file = new PbnFile();
+        var token1 = new Tag("MyTag", "values");
+        var token2 = new EmptyLine();
         file.AppendToken(token1);
         file.AppendToken(token2);
         file.DeleteToken(token1);
@@ -69,7 +69,7 @@ public class PbnFileTests
     public void SerializationTest()
     {
         // Create a PbnFile object and add some tokens
-        PbnFile pbnFile = new PbnFile();
+        var pbnFile = new PbnFile();
 
         pbnFile.AppendToken(new Tag("MyTag", "values"));
         pbnFile.AppendToken(new EmptyLine());
@@ -78,13 +78,11 @@ public class PbnFileTests
         pbnFile.AppendToken(new CustomEscapedLine(" Mycrypticline"));
 
         // Serialize the PbnFile object to a StringWriter
-        using (StringWriter sw = new System.IO.StringWriter())
-        {
-            pbnFile.Serialize(sw);
+        using var sw = new StringWriter();
+        pbnFile.Serialize(sw);
 
-            var expected = "[MyTag \"values\"]\n\n[MyTagOther \"values 2\"]\n\n% Mycrypticline\n".ReplaceLineEndings();
-            // Verify that the serialized string matches the expected output
-            Assert.AreEqual(expected, sw.ToString());
-        }
+        var expected = "[MyTag \"values\"]\n\n[MyTagOther \"values 2\"]\n\n% Mycrypticline\n".ReplaceLineEndings();
+        // Verify that the serialized string matches the expected output
+        Assert.AreEqual(expected, sw.ToString());
     }
 }

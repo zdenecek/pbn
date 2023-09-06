@@ -27,8 +27,6 @@ namespace tests
                 Vulnerability = Vulnerability.None
             });
             
-
-
             Assert.AreEqual(7, table.GetDoubleDummyTricks(Suit.Notrump, Position.North));
         }   
     }

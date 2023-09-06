@@ -3,12 +3,22 @@ using System.Linq;
 
 namespace pbn.model;
 
+/// <summary>
+/// Represents a double dummy and par contracts analysis.
+/// </summary>
 public class AnalysisTable
 {
     private readonly int[,] ddTable;
     
-    public Contract MinimaxContract { get; init; }
-    public int MinimaxScore { get; init; }
+    /// <summary>
+    /// A single contract that maximizes the score.
+    /// </summary>
+    public Contract MinimaxContract { get; }
+    
+    /// <summary>
+    /// Best possible score for <see cref="MinimaxContract"/>.
+    /// </summary>
+    public int MinimaxScore { get; }
 
     /// <summary>
     ///     Creates a new AnalysisTable from a double dummy table.
@@ -23,6 +33,12 @@ public class AnalysisTable
         MinimaxScore = minimaxScore;
     }
 
+    /// <summary>
+    /// Creates a new AnalysisTable from given delegate.
+    /// </summary>
+    /// <remarks>
+    /// The delegate is used during the construction of the table to fill it with values and is not used afterwards.
+    /// </remarks>
     public static AnalysisTable BuildAnalysisTable(Func<Position, Suit, int> ddTable, Contract minimaxContract, int minimaxScore)
     {
         var table = new int[5, 4];
@@ -34,6 +50,7 @@ public class AnalysisTable
         return new AnalysisTable(table, minimaxContract, minimaxScore);
     }
 
+    /// <returns>Double dummy tricks for a given trump suit and declarer position</returns>
     public int GetDoubleDummyTricks(Suit suit, Position position)
     {
         return ddTable[(int)suit, (int)position];

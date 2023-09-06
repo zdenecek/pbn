@@ -4,16 +4,24 @@ using System.IO;
 using System.Linq;
 
 namespace pbn.tokens;
-
+/// <summary>
+/// Represents a table tag in a PBN file, ie. tag with values.
+/// </summary>
 public record
     TableTag(string Name, string Value, IList<string> Values) : Tag(Name, Value)
 {
+    
+    /// <summary>
+    /// Column information for this table.
+    /// </summary>
     public IList<ColumnInfo> Columns { get; init; } = ParseColumnInfo(Value);
 
     public override string Typename => "Table Tag";
 
-
-    public static ColumnInfo ParseSingleColumnInfo(string info)
+    /// <summary>
+    /// Parses a single column information from a string.
+    /// </summary>
+    private static ColumnInfo ParseSingleColumnInfo(string info)
     {
         var str = info;
         var colInfo = new ColumnInfo();
@@ -30,7 +38,7 @@ public record
         {
             var parts = str.Split(ColumnInfo.OrderingInfoSeparator);
             if (parts.Length != 2)
-                throw new Exception("Invalid column format: " + info);
+                throw new FormatException("Invalid column format: " + info);
             colInfo.Name = parts[0];
             if (parts[1].EndsWith(ColumnInfo.RightAlignChar) || parts[1].EndsWith(ColumnInfo.LeftAlignChar))
             {
@@ -46,7 +54,7 @@ public record
             }
             catch (FormatException)
             {
-                throw new Exception("Invalid column format: " + info);
+                throw new FormatException("Invalid column format: " + info);
             }
         }
         else
@@ -57,6 +65,9 @@ public record
         return colInfo;
     }
 
+    /// <summary>
+    /// Parses column information from a string.
+    /// </summary>
     private static IList<ColumnInfo> ParseColumnInfo(string tagContent)
     {
         var infos = new List<ColumnInfo>();
@@ -101,7 +112,9 @@ public record
         }
     }
 
-
+    /// <summary>
+    /// Represents column information for a table tag.
+    /// </summary>
     public record struct ColumnInfo(string Name, ColumnInfo.ColumnOrdering Ordering,
         ColumnInfo.ColumnAlignment Alignment, int AlignmentWidth)
     {

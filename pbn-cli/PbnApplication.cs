@@ -9,7 +9,10 @@ using pbn.tokens;
 
 namespace pbn_cli;
 
-internal class Application
+/// <summary>
+/// The CLI Application class. This is a singleton.
+/// </summary>
+public class Application
 {
     public const string Version = "0.0.1";
 
@@ -23,11 +26,17 @@ internal class Application
     private Application()
     {
     }
-
+    
+    /// <summary>
+    /// Singleton instance.
+    /// </summary>
     public static Application Instance { get; }
-
+    
+    /// <summary>
+    /// Reflects the verbose flag.
+    /// </summary>
     public bool Verbose { get; set; }
-
+    
     public void Run(Options options)
     {
         if (options.Version)
@@ -41,11 +50,11 @@ internal class Application
 
         if (string.IsNullOrWhiteSpace(options.InputFile))
         {
-            Console.WriteLine("No input file specified");
+            Console.Error.WriteLine("No input file specified");
             return;
         }
 
-        var filename = options.InputFile;
+        var filename = options.InputFile!;
 
         HandleFile(filename, options);
     }
@@ -55,7 +64,18 @@ internal class Application
         using var inputFile = new StreamReader(filename);
         var tagFactory = TagFactory.MakeDefault();
         var parser = new PbnParser(PbnParser.RecoveryMode.Strict, tagFactory);
-        var file = parser.Parse(inputFile);
+
+        PbnFile file;
+
+        try
+        {
+            file = parser.Parse(inputFile);
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine($"Error parsing file: {e.Message}");
+            return;
+        }
 
         if (options.Debug)
         {
@@ -95,7 +115,10 @@ internal class Application
     }
 }
 
-internal class Options
+/// <summary>
+/// Holds the information on what flags, options and arguments were given when running the program.
+/// </summary>
+public class Options
 {
     [Option('h', "help", HelpText = "Produce help message")]
     public bool Help { get; set; }

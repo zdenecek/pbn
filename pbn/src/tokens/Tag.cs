@@ -2,6 +2,12 @@ using System.IO;
 
 namespace pbn.tokens;
 
+/// <summary>
+/// Represents a tag in a PBN file.
+/// Example of a tag: '[Name "Value"]'
+/// </summary>
+/// <param name="Name">Name of the tag</param>
+/// <param name="Value">Value of the tag</param>
 public record Tag(string Name, string Value) : SemanticPbnToken
 {
     public const string TagOpeningDelimiter = "[";

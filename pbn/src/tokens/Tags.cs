@@ -3,6 +3,10 @@ using pbn.tokens.tags;
 
 namespace pbn.tokens;
 
+
+/// <summary>
+/// Utility class for PBN tags.
+/// </summary>
 public static class Tags
 {
     public const string DoubleDummyTricks = "DoubleDummyTricks";

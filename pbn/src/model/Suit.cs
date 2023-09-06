@@ -2,6 +2,7 @@
 
 namespace pbn.model;
 
+/// Represents contract suit, ie. including notrump.
 public enum Suit
 {
     Notrump,
@@ -11,13 +12,16 @@ public enum Suit
     Clubs
 }
 
+/// Helper extension methods for <see cref="Suit"/>.
 public static class SuitHelpers
 {
+    /// Convert string to suit, case insensitive. Uses first letter of the string.
     public static Suit FromString(string str)
     {
         return FromLetter(str[0]);
     }
 
+    /// Convert char to suit, case insensitive.
     public static Suit FromLetter(char c)
     {
         return c switch
@@ -31,6 +35,7 @@ public static class SuitHelpers
         };
     }
 
+    /// Convert suit to string. First letter is upper case. Notrump is "No trumps".
     public static string ToString(this Suit suit)
     {
         return suit switch
@@ -44,6 +49,7 @@ public static class SuitHelpers
         };
     }
     
+    /// Convert suit to char upper case.
     public static char ToLetter(this Suit suit)
     {
         return suit switch
@@ -57,6 +63,7 @@ public static class SuitHelpers
         };
     }
     
+    /// Convert suit to char upper case. Notrump is "NT".
     public static string ToLetters(this Suit suit)
     {
         return suit switch

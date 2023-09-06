@@ -1,8 +1,8 @@
-using System.IO;
+﻿using System.IO;
 
 namespace pbn;
 
-public class PbnSerializer
+public abstract class SerializerBase : ISerializer
 {
     /// <summary>
     ///     Serialize the PBN file to a physical file.
@@ -11,22 +11,14 @@ public class PbnSerializer
     /// <param name="filename">Path to save the file to.</param>
     public void Serialize(PbnFile file, string filename)
     {
-        var name = filename;
-        if (!filename.EndsWith(".pbn")) name += ".pbn";
-
-        using (TextWriter writer = new StreamWriter(name))
-        {
-            Serialize(file, writer);
-        }
+        using TextWriter writer = new StreamWriter(filename);
+        Serialize(file, writer);
     }
-
+    
     /// <summary>
     ///     Serialize the PBN file to a stream.
     /// </summary>
     /// <param name="file">The PbnFile to serialize.</param>
-    /// <param name="outputStream">Stream to serialize the file to.</param>
-    public void Serialize(PbnFile file, TextWriter outputStream)
-    {
-        file.Serialize(outputStream);
-    }
+    /// <param name="outputStream">The stream to serialize to.</param>
+    public abstract void Serialize(PbnFile file, TextWriter outputStream);
 }

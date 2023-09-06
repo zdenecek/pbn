@@ -10,6 +10,9 @@ using pbn.utils;
 
 namespace pbn.manipulators;
 
+/// <summary>
+/// Class for adding double dummy and par score analysis to PBN file.
+/// </summary>
 public class PbnBoardAnalyzer
 {
     public enum AnalysisType
@@ -50,10 +53,16 @@ public class PbnBoardAnalyzer
 
     public PbnBoardAnalyzer(DdsAnalysisService analysisService, TagFactory tagFactory)
     {
-        this.analysisService = analysisService;
-        this.tagFactory = tagFactory;
+        this.analysisService = analysisService ?? throw new ArgumentNullException(nameof(analysisService));
+        this.tagFactory = tagFactory ?? throw new ArgumentNullException(nameof(tagFactory));
     }
 
+    /// <summary>
+    /// Get tag names corresponding to given analysis type.
+    /// </summary>
+    /// <remarks>
+    /// There are more ways to encode analysis into a Pbn file, see <see cref="AnalysisType"/>.
+    /// </remarks>
     private HashSet<string> GetAnalysisTagNames(AnalysisType type)
     {
         return type switch
@@ -64,6 +73,12 @@ public class PbnBoardAnalyzer
         };
     }
 
+    /// <summary>
+    /// Adds analysis to given file. Removes or reuses existing analysis tokens.
+    /// </summary>
+    /// <remarks>
+    /// Uses the <see cref="AnalysisType.AbilityAnalysis"/> type of analysis.
+    /// </remarks>
     public void AddAnalyses(PbnFile file)
     {
         PurgeAnalysesTokens(file, AnalysisType.OptimumResultTableAnalysis);
@@ -82,6 +97,12 @@ public class PbnBoardAnalyzer
         AddAnalyses(toBeAnalyzed);
     }
 
+    /// <summary>
+    /// Adds analyses to given board contexts.
+    /// </summary>
+    /// <remarks>
+    /// Uses the <see cref="AnalysisType.AbilityAnalysis"/> type of analysis.
+    /// </remarks>
     private void AddAnalyses(List<PbnFile.BoardContext> boardContexts)
     {
         var boards = boardContexts.Select(context => context.AsBoard()).ToList();
@@ -96,14 +117,38 @@ public class PbnBoardAnalyzer
             }
         }
     }
+    
+    /// <summary>
+    /// Creates ability tag and minimax tag from a given analysis table.
+    /// </summary>
+    private IEnumerable<SemanticPbnToken> CreateAnalysisTokens(AnalysisTable table) =>
+        new[] { MakeAbilityTag(table), MakeMinimaxTag(table) };
 
-    private IEnumerable<SemanticPbnToken> CreateAnalysisTokens(AnalysisTable table)
+    /// <summary>
+    /// Creates a minimax tag from a given analysis table.
+    /// </summary>
+    private Tag MakeMinimaxTag(AnalysisTable table)
     {
-        // [Ability "N:34425 E:A98B7 S:34425 W:A98B7"]
         var tokenString = new StringBuilder();
-        foreach (var position in new [] { Position.North , Position.East, Position.South, Position.West})
+
+        tokenString.Append(table.MinimaxContract.Level);
+        tokenString.Append(table.MinimaxContract.Suit.ToLetter());
+        tokenString.Append(table.MinimaxContract.Declarer.ToLetter());
+        tokenString.Append(table.MinimaxScore);
+
+        var minimaxTag = tagFactory.CreateTag("Minimax", tokenString.ToString());
+        return minimaxTag;
+    }
+    
+    /// <summary>
+    /// Creates ability tag from a given analysis table.
+    /// </summary>
+    private Tag MakeAbilityTag(AnalysisTable table)
+    {
+        var tokenString = new StringBuilder();
+        foreach (var position in new[] { Position.North, Position.East, Position.South, Position.West })
         {
-            if(position != Position.North) tokenString.Append(' ');    
+            if (position != Position.North) tokenString.Append(' ');
             tokenString.Append(position.ToLetter()).Append(':');
             foreach (var suit in new[] { Suit.Notrump, Suit.Spades, Suit.Hearts, Suit.Diamonds, Suit.Clubs })
             {
@@ -113,22 +158,13 @@ public class PbnBoardAnalyzer
         }
 
         var abilityTag = tagFactory.CreateTag("Ability", tokenString.ToString());
-
-        tokenString = new StringBuilder();
-
-        // [Minimax "3NW-430"]
-
-        tokenString.Append(table.MinimaxContract.Level);
-        tokenString.Append(table.MinimaxContract.Suit.ToLetter());
-        tokenString.Append(table.MinimaxContract.Declarer.ToLetter());
-        tokenString.Append(table.MinimaxScore);
-
-        var minimaxTag = tagFactory.CreateTag("Minimax", tokenString.ToString());
-
-        return new [] {abilityTag, minimaxTag};
+        return abilityTag;
     }
-    
 
+
+    /// <summary>
+    /// Removes all tokens corresponding to given analysis type from a <see cref="PbnFile"/>.
+    /// </summary>
     private void PurgeAnalysesTokens(PbnFile file, AnalysisType type)
     {
         var names = GetAnalysisTagNames(type);
@@ -137,6 +173,9 @@ public class PbnBoardAnalyzer
         foreach (var tag in toDelete) file.DeleteToken(tag);
     }
 
+    /// <summary>
+    /// Removes all tokens corresponding to given analysis type from a board context.
+    /// </summary>
     private void PurgeAnalysesTokens(PbnFile file, PbnFile.BoardContext context, AnalysisType type)
     {
         var names = GetAnalysisTagNames(type);
@@ -145,7 +184,9 @@ public class PbnBoardAnalyzer
         foreach (var tag in toDelete) file.DeleteToken(tag);
     }
 
-
+    /// <summary>
+    /// Returns true if given board has full analysis of given type.
+    /// </summary>
     private bool HasAnalysis(PbnFile.BoardContext context, AnalysisType type)
     {
         var names = GetAnalysisTagNames(type);

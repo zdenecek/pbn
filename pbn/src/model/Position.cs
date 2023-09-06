@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace pbn.model;
 
+/// Represents a position in bridge.
 public enum Position
 {
     North,
@@ -11,13 +12,16 @@ public enum Position
     West
 }
 
+/// Helper extension methods for <see cref="Position"/>.
 public static class PositionHelpers
 {
+    /// Convert string to position, case insensitive. Uses first letter of the string.
     public static Position FromString(string str)
     {
         return FromLetter(str[0]);
     }
     
+    /// Convert char to position, case insensitive.
     public static Position FromLetter(char c)
     {
         return c switch
@@ -30,6 +34,7 @@ public static class PositionHelpers
         };
     }
 
+    /// Convert position to string. First letter is upper case.
     public static string ToString(this Position position)
     {
         return position switch
@@ -42,6 +47,7 @@ public static class PositionHelpers
         };
     }
 
+    /// Convert position to char upper case.
     public static char ToLetter(this Position position)
     {
         return position switch
@@ -54,16 +60,19 @@ public static class PositionHelpers
         };
     }
 
+    /// Get all positions. In order: North, East, South, West.
     public static IEnumerable<Position> All()
     {
         return new[] { Position.North, Position.East, Position.South, Position.West };
     }
 
+    /// <returns>True if position is North or South</returns>
     public static bool IsNs(this Position position)
     {
         return position == Position.North || position == Position.South;
     }
     
+    /// <returns>True if position is East or West</returns>
     public static bool IsEw(this Position position)
     {
         return position == Position.East || position == Position.West;
