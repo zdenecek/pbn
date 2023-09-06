@@ -5,6 +5,7 @@ using pbn.tokens;
 namespace pbn.manipulators;
 
 /// <summary>
+///     Prints information about a pbn file.
 ///     Used to execute the --info command.
 /// </summary>
 public class PbnInfoPrinter

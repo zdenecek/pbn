@@ -5,6 +5,9 @@ using pbn.model;
 
 namespace pbn.debug;
 
+/// <summary>
+///     Class with debug utilities.
+/// </summary>
 public static class DebugUtils
 {
     /// <summary>

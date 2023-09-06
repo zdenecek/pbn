@@ -2,7 +2,6 @@
 
 PBN is a command line tool for working with Portable Bridge Notation files.
 
-
 ## Supported functions
 
 - parse a file and validate it
@@ -14,14 +13,14 @@ PBN is a command line tool for working with Portable Bridge Notation files.
 
 - exports to pdf, html
 - stricter adherence to PBN standard (currently it is not fully compliant)
-  - validate
-  - support more obscure import variant
-  - check used features against declared version
+    - validate
+    - support more obscure import variant
+    - check used features against declared version
 - pbn generation using external tools (e.g. Bigdeal)
 
 ## User manual
 
-User manual can be found in [guide.md](guide.md).
+User manual can be found in [guide.md](./guide.md).
 
 Alternatively, it can be found in the generated documentation under **guide**.
 
@@ -31,24 +30,32 @@ Use `--help` flag, or `-h` to see some of the options.
 
 PBN is written in .NET 7 and C#.
 
-###  Build
+### Build
 
 To build, run
 
 ```bash
-cmake --build <build dir>
+dotnet build
 ```
 
 ## Documentation
 
-This project uses dotnet to create documentation.
+This project uses docfx to create documentation.
+You need to have it installed to build the docs.
 
 To build the documentation, run
 
 ```bash
+docfx docs/docfx.json
 ```
 
-Documentation will be generated in the `g` directory.
+Documentation will be generated in the `docs/_site` directory.
+
+If you want to serve the documentation locally, run
+
+```bash
+docfx docs/docfx.json --serve
+```
 
 ## Testing
 

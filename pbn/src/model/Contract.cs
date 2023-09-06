@@ -1,10 +1,14 @@
 ﻿namespace pbn.model;
 
-/// Represents a bridge contract without a result.
+/// <summary>
+///     Represents a bridge contract without a result.
+/// </summary>
 public record struct Contract(int Level, Suit Suit, Position Declarer,
     ContractDoubleState DoubleState = ContractDoubleState.NotDoubled);
 
-/// Represents a contract double state, whether it is not doubled, doubled or redoubled.
+/// <summary>
+///     Represents a contract double state, whether it is not doubled, doubled or redoubled.
+/// </summary>
 public enum ContractDoubleState
 {
     NotDoubled,

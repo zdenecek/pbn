@@ -1,5 +1,6 @@
+# PBN Command line utility
 
-# User guide
+## Usage
 
 To use this project, run the pbn executable.
 

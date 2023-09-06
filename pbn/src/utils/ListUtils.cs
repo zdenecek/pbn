@@ -5,8 +5,14 @@ using pbn.tokens;
 
 namespace pbn.utils;
 
+/// <summary>
+///     Utility methods for working with lists.
+/// </summary>
 public static class ListUtils
 {
+    /// <summary>
+    ///     Returns all tags that have one of the given names.
+    /// </summary>
     public static IEnumerable<Tag> GetAllTagsByNames(this IEnumerable<SemanticPbnToken> tokens,
         IReadOnlySet<string> names)
     {
@@ -17,6 +23,9 @@ public static class ListUtils
             select tag;
     }
 
+    /// <summary>
+    ///     Returns all tags that satisfy the given predicate.
+    /// </summary>
     public static IEnumerable<Tag> GetAllTagsThatSatisfy(this IEnumerable<SemanticPbnToken> tokens,
         Func<Tag, bool> predicate)
     {
@@ -36,10 +45,13 @@ public static class ListUtils
         return found.Count == names.Count;
     }
 
-    public static int IndexOf<T>(this IReadOnlyList<T> self, T elementToFind, int startAt = 0 )
+    /// <summary>
+    ///     IndexOf for IReadOnlyList.
+    /// </summary>
+    public static int IndexOf<T>(this IReadOnlyList<T> self, T elementToFind, int startAt = 0)
     {
-        int i = startAt;
-        foreach (T element in self.Skip(startAt))
+        var i = startAt;
+        foreach (var element in self.Skip(startAt))
         {
             if (Equals(element, elementToFind))
                 return i;

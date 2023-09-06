@@ -3,7 +3,7 @@ using System.IO;
 namespace pbn.tokens;
 
 /// <summary>
-/// Represents an empty line in a PBN file.
+///     Represents an empty line in a PBN file.
 /// </summary>
 public record EmptyLine : SemanticPbnToken
 {

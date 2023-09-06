@@ -11,7 +11,7 @@ using pbn.utils;
 namespace pbn.manipulators;
 
 /// <summary>
-/// Class for adding double dummy and par score analysis to PBN file.
+///     Class for adding double dummy and par score analysis to PBN file.
 /// </summary>
 public class PbnBoardAnalyzer
 {
@@ -58,10 +58,10 @@ public class PbnBoardAnalyzer
     }
 
     /// <summary>
-    /// Get tag names corresponding to given analysis type.
+    ///     Get tag names corresponding to given analysis type.
     /// </summary>
     /// <remarks>
-    /// There are more ways to encode analysis into a Pbn file, see <see cref="AnalysisType"/>.
+    ///     There are more ways to encode analysis into a Pbn file, see <see cref="AnalysisType" />.
     /// </remarks>
     private HashSet<string> GetAnalysisTagNames(AnalysisType type)
     {
@@ -74,10 +74,10 @@ public class PbnBoardAnalyzer
     }
 
     /// <summary>
-    /// Adds analysis to given file. Removes or reuses existing analysis tokens.
+    ///     Adds analysis to given file. Removes or reuses existing analysis tokens.
     /// </summary>
     /// <remarks>
-    /// Uses the <see cref="AnalysisType.AbilityAnalysis"/> type of analysis.
+    ///     Uses the <see cref="AnalysisType.AbilityAnalysis" /> type of analysis.
     /// </remarks>
     public void AddAnalyses(PbnFile file)
     {
@@ -98,10 +98,10 @@ public class PbnBoardAnalyzer
     }
 
     /// <summary>
-    /// Adds analyses to given board contexts.
+    ///     Adds analyses to given board contexts.
     /// </summary>
     /// <remarks>
-    /// Uses the <see cref="AnalysisType.AbilityAnalysis"/> type of analysis.
+    ///     Uses the <see cref="AnalysisType.AbilityAnalysis" /> type of analysis.
     /// </remarks>
     private void AddAnalyses(List<PbnFile.BoardContext> boardContexts)
     {
@@ -111,21 +111,20 @@ public class PbnBoardAnalyzer
         foreach (var (context, analysisTable) in boardContexts.Zip(tables))
         {
             var tokens = CreateAnalysisTokens(analysisTable);
-            foreach (var token in tokens)
-            {
-                context.AppendToken(token);
-            }
+            foreach (var token in tokens) context.AppendToken(token);
         }
     }
-    
-    /// <summary>
-    /// Creates ability tag and minimax tag from a given analysis table.
-    /// </summary>
-    private IEnumerable<SemanticPbnToken> CreateAnalysisTokens(AnalysisTable table) =>
-        new[] { MakeAbilityTag(table), MakeMinimaxTag(table) };
 
     /// <summary>
-    /// Creates a minimax tag from a given analysis table.
+    ///     Creates ability tag and minimax tag from a given analysis table.
+    /// </summary>
+    private IEnumerable<SemanticPbnToken> CreateAnalysisTokens(AnalysisTable table)
+    {
+        return new[] { MakeAbilityTag(table), MakeMinimaxTag(table) };
+    }
+
+    /// <summary>
+    ///     Creates a minimax tag from a given analysis table.
     /// </summary>
     private Tag MakeMinimaxTag(AnalysisTable table)
     {
@@ -139,9 +138,9 @@ public class PbnBoardAnalyzer
         var minimaxTag = tagFactory.CreateTag("Minimax", tokenString.ToString());
         return minimaxTag;
     }
-    
+
     /// <summary>
-    /// Creates ability tag from a given analysis table.
+    ///     Creates ability tag from a given analysis table.
     /// </summary>
     private Tag MakeAbilityTag(AnalysisTable table)
     {
@@ -163,7 +162,7 @@ public class PbnBoardAnalyzer
 
 
     /// <summary>
-    /// Removes all tokens corresponding to given analysis type from a <see cref="PbnFile"/>.
+    ///     Removes all tokens corresponding to given analysis type from a <see cref="PbnFile" />.
     /// </summary>
     private void PurgeAnalysesTokens(PbnFile file, AnalysisType type)
     {
@@ -174,7 +173,7 @@ public class PbnBoardAnalyzer
     }
 
     /// <summary>
-    /// Removes all tokens corresponding to given analysis type from a board context.
+    ///     Removes all tokens corresponding to given analysis type from a board context.
     /// </summary>
     private void PurgeAnalysesTokens(PbnFile file, PbnFile.BoardContext context, AnalysisType type)
     {
@@ -185,7 +184,7 @@ public class PbnBoardAnalyzer
     }
 
     /// <summary>
-    /// Returns true if given board has full analysis of given type.
+    ///     Returns true if given board has full analysis of given type.
     /// </summary>
     private bool HasAnalysis(PbnFile.BoardContext context, AnalysisType type)
     {

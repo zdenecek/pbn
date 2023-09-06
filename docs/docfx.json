@@ -4,12 +4,13 @@
       "src": [
         {
           "files": [
-            "pbn/pbn.csproj"
+            "pbn/pbn.csproj",
+            "pbn-cli/pbn-cli.csproj"
           ],
           "src": "../"
         }
       ],
-      "dest": "api",
+      "dest": "",
       "includePrivateMembers": false,
       "disableGitFeatures": false,
       "disableDefaultFilter": false,

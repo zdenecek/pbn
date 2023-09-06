@@ -7,34 +7,40 @@ using static pbn.tokens.Commentary;
 
 namespace pbn;
 
-/// Class used to parse a pbn file from an input stream.
+/// <summary>
+///     Class used to parse a pbn file from an input stream.
+/// </summary>
 public class PbnParser
 {
-    /// Represents the recovery mode of the parser, what it should do when a lexical or syntactical error is encountered
-    /// Only strict mode is supported at the moment
+    /// <summary>
+    ///     Represents the recovery mode of the parser, what it should do when a lexical or syntactical error is encountered
+    ///     Only strict mode is supported at the moment
+    /// </summary>
     public enum RecoveryMode
     {
-        
-         /// Strict mode. If the parser encounters an error, it will throw an exception.
-         
+        /// <summary>
+        ///     Strict mode. If the parser encounters an error, it will throw an exception.
+        /// </summary>
         Strict,
 
-        
-        /// Relaxed mode, if an error is encountered, the parser will try to recover and parse next tag.
-        
+
+        /// <summary>
+        ///     Relaxed mode, if an error is encountered, the parser will try to recover and parse next tag.
+        /// </summary>
         SkipToNextTag,
 
-        
-        /// Relaxed mode, if an error is encountered, the parser will try to recover and parse next board.
-         /// If there is no board context and an error is encountered, parser will try to skip and parse next tag.
-         
+        /// <summary>
+        ///     Relaxed mode, if an error is encountered, the parser will try to recover and parse next board.
+        ///     If there is no board context and an error is encountered, parser will try to skip and parse next tag.
+        /// </summary>
         SkipToNextBoard
     }
 
     private readonly TagFactory tagFactory;
     private readonly char[] whiteSpaceCharacters = " \t\n\v\f\r".ToCharArray();
+
     /// <summary>
-    /// Line counter
+    ///     Line counter
     /// </summary>
     private int currentLine;
 
@@ -83,13 +89,17 @@ public class PbnParser
                 line = "";
                 break;
             }
-            else
-                line = newLine;
+
+            line = newLine;
         }
 
         return values;
     }
 
+    /// <summary>
+    ///     Parses a token from a line. The line is modified to remove the parsed token.
+    ///     Possibly reads more lines from the input stream.
+    /// </summary>
     public SemanticPbnToken ParseToken(ref string line, StreamReader inputStream, bool startedOnNewLine)
     {
         line = line.TrimStart();
@@ -116,10 +126,7 @@ public class PbnParser
             return token;
         }
 
-        if (firstValidCharacter == '{')
-        {
-            return ParseMultilineComment(ref line, ref inputStream, startedOnNewLine);
-        }
+        if (firstValidCharacter == '{') return ParseMultilineComment(ref line, ref inputStream, startedOnNewLine);
 
         {
             var token = new TextLine(line);
@@ -128,6 +135,10 @@ public class PbnParser
         }
     }
 
+    /// <summary>
+    ///     Parses a tag from a line. The line is modified to remove the parsed tag.
+    ///     Possibly reads more lines from the input stream.
+    /// </summary>
     public Tag ParseTag(ref string line, ref StreamReader inputStream, bool startedOnNewLine)
     {
         var regex1 = new Regex(@"(\s*\[\s*(\w+)\s*""(.*)""\s*\]\s*)");
@@ -158,6 +169,10 @@ public class PbnParser
         return tag;
     }
 
+    /// <summary>
+    ///     Parses a multiline comment from a line. The line is modified to remove the parsed comment.
+    ///     Consumes lines from the input stream until the comment is closed.
+    /// </summary>
     private Commentary ParseMultilineComment(ref string line, ref StreamReader inputStream, bool startedOnNewLine)
     {
         var start = line.IndexOf('{');
@@ -168,7 +183,8 @@ public class PbnParser
         while (line.IndexOf('}') == -1)
         {
             content += line + "\n";
-            line = GetLine(inputStream) ?? throw new InvalidOperationException("Multiline comment not closed at line " + lineno);
+            line = GetLine(inputStream) ??
+                   throw new InvalidOperationException("Multiline comment not closed at line " + lineno);
         }
 
         var end = line.IndexOf("}", StringComparison.Ordinal);
@@ -182,10 +198,10 @@ public class PbnParser
 
         return token;
     }
-    
-    
+
+
     /// <summary>
-    /// Parses a PBN file from an input stream.
+    ///     Parses a PBN file from an input stream.
     /// </summary>
     public PbnFile Parse(StreamReader inputStream)
     {

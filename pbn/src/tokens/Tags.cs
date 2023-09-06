@@ -3,9 +3,8 @@ using pbn.tokens.tags;
 
 namespace pbn.tokens;
 
-
 /// <summary>
-/// Utility class for PBN tags.
+///     Utility class for PBN tags.
 /// </summary>
 public static class Tags
 {
@@ -36,7 +35,7 @@ public static class Tags
         ScoringTag.TagName,
         DeclarerTag.TagName,
         ContractTag.TagName,
-        ResultTag.TagName,
+        ResultTag.TagName
     };
 
     public static readonly IReadOnlySet<string> TableTags = new HashSet<string>
@@ -51,12 +50,18 @@ public static class Tags
         TotalScoreTable
     };
 
+    /// <summary>
+    ///     Returns true if the tag name is one of known PBN tags.
+    ///     Unknown tags are not invalid.
+    /// </summary>
     public static bool IsTagRecognized(string tagName)
     {
         return IdentificationSectionTags.Contains(tagName) || TableTags.Contains(tagName);
     }
 
-
+    /// <summary>
+    ///     Returns true if the token is a tag that is in the scope of a board.
+    /// </summary>
     public static bool IsBoardScopeToken(SemanticPbnToken token)
     {
         if (token is not Tag tag) return false;

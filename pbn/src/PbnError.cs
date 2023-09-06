@@ -2,9 +2,8 @@
 
 namespace pbn;
 
-
 /// <summary>
-/// Base class for all PBN errors.
+///     Base class for all PBN errors.
 /// </summary>
 public class PbnError : Exception
 {

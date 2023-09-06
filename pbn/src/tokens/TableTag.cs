@@ -4,22 +4,22 @@ using System.IO;
 using System.Linq;
 
 namespace pbn.tokens;
+
 /// <summary>
-/// Represents a table tag in a PBN file, ie. tag with values.
+///     Represents a table tag in a PBN file, ie. tag with values.
 /// </summary>
 public record
     TableTag(string Name, string Value, IList<string> Values) : Tag(Name, Value)
 {
-    
     /// <summary>
-    /// Column information for this table.
+    ///     Column information for this table.
     /// </summary>
     public IList<ColumnInfo> Columns { get; init; } = ParseColumnInfo(Value);
 
     public override string Typename => "Table Tag";
 
     /// <summary>
-    /// Parses a single column information from a string.
+    ///     Parses a single column information from a string.
     /// </summary>
     private static ColumnInfo ParseSingleColumnInfo(string info)
     {
@@ -66,7 +66,7 @@ public record
     }
 
     /// <summary>
-    /// Parses column information from a string.
+    ///     Parses column information from a string.
     /// </summary>
     private static IList<ColumnInfo> ParseColumnInfo(string tagContent)
     {
@@ -113,7 +113,7 @@ public record
     }
 
     /// <summary>
-    /// Represents column information for a table tag.
+    ///     Represents column information for a table tag.
     /// </summary>
     public record struct ColumnInfo(string Name, ColumnInfo.ColumnOrdering Ordering,
         ColumnInfo.ColumnAlignment Alignment, int AlignmentWidth)

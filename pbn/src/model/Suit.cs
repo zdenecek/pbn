@@ -2,7 +2,9 @@
 
 namespace pbn.model;
 
-/// Represents contract suit, ie. including notrump.
+/// <summary>
+///     Represents contract suit, ie. including notrump.
+/// </summary>
 public enum Suit
 {
     Notrump,
@@ -12,16 +14,22 @@ public enum Suit
     Clubs
 }
 
-/// Helper extension methods for <see cref="Suit"/>.
+/// <summary>
+///     Helper extension methods for <see cref="Suit" />.
+/// </summary>
 public static class SuitHelpers
 {
-    /// Convert string to suit, case insensitive. Uses first letter of the string.
+    /// <summary>
+    ///     Convert string to suit, case insensitive. Uses first letter of the string.
+    /// </summary>
     public static Suit FromString(string str)
     {
         return FromLetter(str[0]);
     }
 
-    /// Convert char to suit, case insensitive.
+    /// <summary>
+    ///     Convert char to suit, case insensitive.
+    /// </summary>
     public static Suit FromLetter(char c)
     {
         return c switch
@@ -35,7 +43,9 @@ public static class SuitHelpers
         };
     }
 
-    /// Convert suit to string. First letter is upper case. Notrump is "No trumps".
+    /// <summary>
+    ///     Convert suit to string. First letter is upper case. Notrump is "No trumps".
+    /// </summary>
     public static string ToString(this Suit suit)
     {
         return suit switch
@@ -48,8 +58,10 @@ public static class SuitHelpers
             _ => throw new ArgumentException($"Unknown suit: {suit}")
         };
     }
-    
-    /// Convert suit to char upper case.
+
+    /// <summary>
+    ///     Convert suit to char upper case.
+    /// </summary>
     public static char ToLetter(this Suit suit)
     {
         return suit switch
@@ -62,8 +74,10 @@ public static class SuitHelpers
             _ => throw new ArgumentException($"Unknown suit: {suit}")
         };
     }
-    
-    /// Convert suit to char upper case. Notrump is "NT".
+
+    /// <summary>
+    ///     Convert suit to char upper case. Notrump is "NT".
+    /// </summary>
     public static string ToLetters(this Suit suit)
     {
         return suit switch

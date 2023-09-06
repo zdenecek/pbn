@@ -14,7 +14,10 @@ namespace pbn_cli;
 /// </summary>
 public class Application
 {
-    public const string Version = "0.0.1";
+    /// <summary>
+    /// Version of the application.
+    /// </summary>
+    public const string Version = "0.1.0";
 
     static Application()
     {
@@ -33,7 +36,7 @@ public class Application
     public static Application Instance { get; }
     
     /// <summary>
-    /// Reflects the verbose flag.
+    /// True if the application was started with the verbose flag.
     /// </summary>
     public bool Verbose { get; set; }
     

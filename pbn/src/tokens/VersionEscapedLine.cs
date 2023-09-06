@@ -3,15 +3,15 @@ using System.IO;
 namespace pbn.tokens;
 
 /// <summary>
-/// Represents the version escaped line directive, e.g. "% PBN 2.1"
+///     Represents the version escaped line directive, e.g. "% PBN 2.1"
 /// </summary>
 public record VersionEscapedLine : EscapedLine
 {
     public const string VersionLinePrefix = " " + "PBN" + " ";
 
-    private readonly string versionString;
-
     public readonly PbnVersion Version;
+
+    private readonly string versionString;
 
     public VersionEscapedLine(string versionString)
     {

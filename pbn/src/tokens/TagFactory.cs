@@ -7,7 +7,7 @@ namespace pbn.tokens;
 using TagFactoryMethod = Func<string, string, Tag>;
 
 /// <summary>
-/// Factory for creating tags, instantiates the correct tag type based on the tag name.
+///     Factory for creating tags, instantiates the correct tag type based on the tag name.
 /// </summary>
 public class TagFactory
 {
@@ -61,6 +61,9 @@ public class TagFactory
         return tag;
     }
 
+    /// <summary>
+    ///     Returns true if the tag name is one of known PBN table tags.
+    /// </summary>
     public bool IsTableTag(string tagName)
     {
         return Tags.TableTags.Contains(tagName);
@@ -68,7 +71,7 @@ public class TagFactory
 
     public TableTag CreateTableTag(string tagName, string tagContent, List<string> values, int? lineNumber = null)
     {
-        var tag =  new TableTag(tagName, tagContent, values)
+        var tag = new TableTag(tagName, tagContent, values)
         {
             OriginLine = lineNumber
         };

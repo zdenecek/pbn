@@ -15,10 +15,14 @@ namespace pbn;
 /// </summary>
 public class PbnFile
 {
-    /// All board contexts in the file.
+    /// <summary>
+    ///     All board contexts in the file.
+    /// </summary>
     private readonly List<BoardContext> boards = new();
 
-    /// All tokens in the file.
+    /// <summary>
+    ///     All tokens in the file.
+    /// </summary>
     private readonly List<SemanticPbnToken> tokens = new();
 
     /// <summary>
@@ -134,7 +138,7 @@ public class PbnFile
             }
             else if (at == range.StartIndex && Tags.IsBoardScopeToken(token) && token.OwningBoardContext == null)
             {
-                if (boardContext.AcceptsToken(token, atIndex: 0))
+                if (boardContext.AcceptsToken(token, 0))
                 {
                     boardContext.ApplyToken(token);
                 }
@@ -144,7 +148,7 @@ public class PbnFile
                     newlyCreatedBoardContexts.Add(new BoardContext(this, new TokenRange
                     {
                         StartIndex = at,
-                        EndOffset = 0,
+                        EndOffset = 0
                     }));
                 }
             }
@@ -280,7 +284,7 @@ public class PbnFile
         /// </summary>
         public TokenRange TokenRange { get; set; }
 
-        public int? BoardNumber => this.GetTag<BoardTag>(BoardTag.TagName)?.BoardNumber;
+        public int? BoardNumber => GetTag<BoardTag>(BoardTag.TagName)?.BoardNumber;
 
         /// <summary>
         ///     Returns the tokens that are part of this context.
@@ -289,7 +293,7 @@ public class PbnFile
         public IEnumerable<SemanticPbnToken> Tokens => pbnFile.GetContextTokens(this);
 
         /// <summary>
-        /// Get the first tag with the given name in this context.
+        ///     Get the first tag with the given name in this context.
         /// </summary>
         /// <param name="name">Name of the tag</param>
         /// <typeparam name="T">Type to cast the tag as</typeparam>
@@ -306,10 +310,7 @@ public class PbnFile
         {
             token.OwningBoardContext = this;
             if (token is not Tag tag) return;
-            if (tag is BoardTag)
-            {
-                Debug.Assert(BoardNumber is null, "Internal error: Board number is already set.");
-            }
+            if (tag is BoardTag) Debug.Assert(BoardNumber is null, "Internal error: Board number is already set.");
 
             if (!tagsByName.ContainsKey(tag.Name)) tagsByName[tag.Name] = new List<Tag>();
             tagsByName[tag.Name].Add(tag);
@@ -324,19 +325,19 @@ public class PbnFile
             if (token is not Tag tag) return;
 
             if (tag is BoardTag && BoardNumber != null)
-            {
                 throw new InvalidOperationException("Internal error: Board number cannot be changed.");
-            }
 
             tagsByName[tag.Name].Remove(tag);
         }
 
         /// <summary>
-        /// Check whether a given token can be applied to the context.
+        ///     Check whether a given token can be applied to the context.
         /// </summary>
-        /// <param name="token" ></param>
-        /// <param name="atIndex">Where would the token be added.
-        /// Null means after the last token currently in the context.</param>
+        /// <param name="token"></param>
+        /// <param name="atIndex">
+        ///     Where would the token be added.
+        ///     Null means after the last token currently in the context.
+        /// </param>
         public bool AcceptsToken(SemanticPbnToken token, int? atIndex = null)
         {
             // not used at the moment
@@ -356,7 +357,7 @@ public class PbnFile
         }
 
         /// <summary>
-        /// Return a board object representing the board described by this context.
+        ///     Return a board object representing the board described by this context.
         /// </summary>
         public Board AsBoard()
         {
@@ -377,38 +378,49 @@ public class PbnFile
         }
 
         /// <summary>
-        /// Append a token to the file after the last token of the context.
+        ///     Append a token to the file after the last token of the context.
         /// </summary>
         public void AppendToken(SemanticPbnToken token)
         {
-            pbnFile.InsertToken(this.TokenRange.EndIndex + 1, token);
+            pbnFile.InsertToken(TokenRange.EndIndex + 1, token);
             Debug.Assert(token.OwningBoardContext == this);
         }
 
         /// <summary>
-        /// Insert a token to the file in front of the specified token of the context.
+        ///     Insert a token to the file in front of the specified token of the context.
         /// </summary>
         public void InsertToken(SemanticPbnToken token, int atIndex)
         {
-            var index = pbnFile.Tokens.IndexOf(this.Tokens.ElementAt(atIndex));
+            var index = pbnFile.Tokens.IndexOf(Tokens.ElementAt(atIndex));
             pbnFile.InsertToken(index, token);
             Debug.Assert(token.OwningBoardContext == this);
         }
     }
 
-    /// Maps board context id to token ranges.
+    /// <summary>
+    ///     Maps board context id to token ranges.
+    /// </summary>
     public record struct TokenRange
     {
-        /// Index of the last token in the range in the tokens list.
+        /// <summary>
+        ///     Index of the last token in the range in the tokens list.
+        /// </summary>
         public int EndOffset;
 
-        /// Index of the first token in the range in the tokens list.
+        /// <summary>
+        ///     Index of the first token in the range in the tokens list.
+        /// </summary>
         public int StartIndex;
 
-        /// Index of the last token in the range in the tokens list.
+        /// <summary>
+        ///     Index of the last token in the range in the tokens list.
+        /// </summary>
+
         public int EndIndex => StartIndex + EndOffset;
 
-        /// Count of tokens in the range, given that the range contains all tokens between start and end token.
+        /// <summary>
+        ///     Count of tokens in the range, given that the range contains all tokens between start and end token.
+        /// </summary>
         public int TokenCount => EndOffset + 1;
     }
 }

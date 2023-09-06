@@ -55,15 +55,15 @@ public record DateTag : Tag
 
 public record PlayerTag : Tag
 {
-    public PlayerTag(string name, string value) : base(name, value)
-    {
-    }
-
     public const string West = "West";
     public const string North = "North";
     public const string East = "East";
     public const string South = "South";
-    
+
+    public PlayerTag(string name, string value) : base(name, value)
+    {
+    }
+
     public Position Position => PositionHelpers.FromString(Value);
 }
 

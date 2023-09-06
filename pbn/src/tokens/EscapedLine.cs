@@ -2,10 +2,9 @@ using System.Text.RegularExpressions;
 
 namespace pbn.tokens;
 
-
 /// <summary>
-/// Represents an escaped line in a PBN file.
-/// Also export and version directives.
+///     Represents an escaped line in a PBN file.
+///     Also export and version directives.
 /// </summary>
 public abstract record EscapedLine : SemanticPbnToken
 {
@@ -16,7 +15,7 @@ public abstract record EscapedLine : SemanticPbnToken
     public bool IsDirective => this is VersionEscapedLine or ExportEscapedLine;
 
     /// <summary>
-    /// Factory method for escaped lines, creates appropriate subclass.
+    ///     Factory method for escaped lines, creates appropriate subclass.
     /// </summary>
     public static EscapedLine Create(string contents)
     {

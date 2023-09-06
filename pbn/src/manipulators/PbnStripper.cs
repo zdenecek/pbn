@@ -4,7 +4,8 @@ using pbn.tokens;
 namespace pbn.manipulators;
 
 /// <summary>
-///     Used to execute the --strip command. Used to purge a pbn file of unwanted tokens.
+///     Used to purge a pbn file of unwanted tokens.
+///     Used to execute the --strip command.
 /// </summary>
 public class PbnStripper
 {

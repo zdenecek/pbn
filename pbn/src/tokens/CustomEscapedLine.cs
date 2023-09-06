@@ -3,7 +3,7 @@ using System.IO;
 namespace pbn.tokens;
 
 /// <summary>
-/// Represents an escaped line without a special meaning.
+///     Represents an escaped line without a special meaning.
 /// </summary>
 public record CustomEscapedLine(string Content) : EscapedLine
 {

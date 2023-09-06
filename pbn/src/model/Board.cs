@@ -1,9 +1,7 @@
 ﻿namespace pbn.model;
 
-
-
 /// <summary>
-/// Represents a bridge board.
+///     Represents a bridge board.
 /// </summary>
 /// <param name="Number">Board number</param>
 /// <param name="Vulnerability">Board Vulnerability</param>

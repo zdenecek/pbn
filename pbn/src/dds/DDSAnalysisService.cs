@@ -6,7 +6,7 @@ using pbn.service;
 namespace pbn.dds;
 
 /// <summary>
-/// Analysis service using DDS library.
+///     Analysis service using DDS library.
 /// </summary>
 public class DdsAnalysisService : IAnalysisService
 {
@@ -37,7 +37,7 @@ public class DdsAnalysisService : IAnalysisService
         var byVul = boards.Select((board, index) => new
             {
                 Board = board,
-                Index = index,
+                Index = index
             })
             .GroupBy(x => x.Board.Vulnerability);
 
@@ -45,19 +45,16 @@ public class DdsAnalysisService : IAnalysisService
 
         foreach (var grouping in byVul)
         {
-            var res = this.AnalyzeBoardsGivenVulnerability(grouping.Select(b => b.Board).ToList(), grouping.Key);
-            for (int i = 0; i < res.Length; i++)
-            {
-                analyses[grouping.ElementAt(i).Index] = res[i];
-            }
+            var res = AnalyzeBoardsGivenVulnerability(grouping.Select(b => b.Board).ToList(), grouping.Key);
+            for (var i = 0; i < res.Length; i++) analyses[grouping.ElementAt(i).Index] = res[i];
         }
 
         return analyses;
     }
 
     /// <summary>
-    /// Run analysis for a list of boards given a vulnerability.
-    /// DDS does not support vulnerability parametrization for each board separately.
+    ///     Run analysis for a list of boards given a vulnerability.
+    ///     DDS does not support vulnerability parametrization for each board separately.
     /// </summary>
     private AnalysisTable[] AnalyzeBoardsGivenVulnerability(IList<Board> boards, Vulnerability vulnerability)
     {
@@ -79,18 +76,16 @@ public class DdsAnalysisService : IAnalysisService
         var res = new AnalysisTable[boards.Count];
 
 
-        for (int i = 0; i < boards.Count; i++)
-        {
-            res[i] = BuildAnalysisTable(tables, parResults, i, boards[i].Dealer);
-        }
+        for (var i = 0; i < boards.Count; i++) res[i] = BuildAnalysisTable(tables, parResults, i, boards[i].Dealer);
 
         return res;
     }
-    
+
     /// <summary>
-    /// Converts DDS Output to <see cref="AnalysisTable"/>
+    ///     Converts DDS Output to <see cref="AnalysisTable" />
     /// </summary>
-    private static AnalysisTable BuildAnalysisTable(DdsTypes.ddTablesRes tables, DdsTypes.allParResults parResults, int i, Position dealer)
+    private static AnalysisTable BuildAnalysisTable(DdsTypes.ddTablesRes tables, DdsTypes.allParResults parResults,
+        int i, Position dealer)
     {
         return AnalysisTable.BuildAnalysisTable(
             (pos, suit) =>
