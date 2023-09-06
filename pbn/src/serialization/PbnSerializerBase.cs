@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace pbn;
+namespace pbn.serialization;
 
 public abstract class SerializerBase : ISerializer
 {

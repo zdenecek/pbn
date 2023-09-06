@@ -22,9 +22,7 @@ PBN is a command line tool for working with Portable Bridge Notation files.
 
 User manual can be found in [guide.md](./guide.md).
 
-Alternatively, it can be found in the generated documentation under **guide**.
-
-Use `--help` flag, or `-h` to see some of the options.
+Use `--help` flag to see the options.
 
 ## Building
 

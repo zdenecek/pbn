@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CommandLine;
 
 namespace pbn_cli;
@@ -10,11 +11,19 @@ internal static class Program
         Parser.Default.ParseArguments<Options>(args)
             .WithParsed(RunOptions)
             .WithNotParsed(HandleParseError);
+            
+        
     }
 
     private static void RunOptions(Options opts)
     {
-        Application.Instance.Run(opts);
+        try
+        {
+            Application.Instance.Run(opts);
+        } catch (Exception e)
+        {
+            Console.Error.WriteLine("Error: " + e.Message);
+        }
     }
 
     private static void HandleParseError(IEnumerable<Error> errs)

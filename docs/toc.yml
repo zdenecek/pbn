@@ -1,5 +1,7 @@
 ### YamlMime:TableOfContent
 items:
+- href: guide.md
+  name: User guide
 - uid: pbn
   name: pbn
   items:

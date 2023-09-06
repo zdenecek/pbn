@@ -284,7 +284,30 @@ public class PbnFile
         /// </summary>
         public TokenRange TokenRange { get; set; }
 
-        public int? BoardNumber => GetTag<BoardTag>(BoardTag.TagName)?.BoardNumber;
+        public int? BoardNumber
+        {
+            get => GetTag<BoardTag>(BoardTag.TagName)?.BoardNumber;
+            set
+            {
+                var tag = GetTag<BoardTag>(BoardTag.TagName);
+                switch (value)
+                {
+                    case var _ when value is < 1:
+                        throw new PbnError("Board number must be positive");
+                    case null when tag is null:
+                        return;
+                    case null:
+                        pbnFile.DeleteToken(tag);
+                        break;
+                    case var _ when tag is null : 
+                        pbnFile.InsertToken(TokenRange.StartIndex, new BoardTag(value.Value.ToString()));
+                        break;
+                    case var _ :
+                        pbnFile.ReplaceToken(tag, tag with{ BoardNumber = value.Value, Value = value.Value.ToString() });
+                        break;
+                }
+            }
+        }
 
         /// <summary>
         ///     Returns the tokens that are part of this context.
@@ -323,10 +346,7 @@ public class PbnFile
         {
             token.OwningBoardContext = null;
             if (token is not Tag tag) return;
-
-            if (tag is BoardTag && BoardNumber != null)
-                throw new InvalidOperationException("Internal error: Board number cannot be changed.");
-
+            
             tagsByName[tag.Name].Remove(tag);
         }
 
@@ -394,6 +414,26 @@ public class PbnFile
             var index = pbnFile.Tokens.IndexOf(Tokens.ElementAt(atIndex));
             pbnFile.InsertToken(index, token);
             Debug.Assert(token.OwningBoardContext == this);
+        }
+    }
+
+    /// <summary>
+    /// Removes a board context from the file. Includes all tokens in the range, even ones that are not part of the context.
+    /// </summary>
+    public void RemoveBoardContext(BoardContext ctx)
+    {
+        var emptyLinesAfter = this.Tokens
+            .Skip(ctx.TokenRange.EndIndex + 1)
+            .TakeWhile(token => token is EmptyLine)
+            .Count();
+        var count = ctx.TokenRange.TokenCount + emptyLinesAfter;
+        
+        tokens.RemoveRange(ctx.TokenRange.StartIndex, count);
+        boards.Remove(ctx);
+        foreach (var contextAfter in boards.Where(b => b.TokenRange.StartIndex > ctx.TokenRange.StartIndex))
+        {
+            var range = contextAfter.TokenRange;
+            contextAfter.TokenRange = range with{ StartIndex = range.StartIndex - count };
         }
     }
 

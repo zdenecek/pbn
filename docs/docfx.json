@@ -10,7 +10,7 @@
           "src": "../"
         }
       ],
-      "dest": "",
+      "dest": "api",
       "includePrivateMembers": false,
       "disableGitFeatures": false,
       "disableDefaultFilter": false,
@@ -31,7 +31,8 @@
       },
       {
         "files": [
-          "README.md"
+          "README.md",
+          "guide.md"
         ],
         "src": "../"
       }

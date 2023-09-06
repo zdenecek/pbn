@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using CommandLine;
 using pbn;
 using pbn.dds;
 using pbn.debug;
 using pbn.manipulators;
+using pbn.model;
+using pbn.serialization;
 using pbn.tokens;
 
 namespace pbn_cli;
@@ -14,6 +17,11 @@ namespace pbn_cli;
 /// </summary>
 public class Application
 {
+    private readonly TagFactory tagFactory;
+    private readonly PbnParser parser;
+    private readonly PbnBoardManipulator boardManipulator;
+    
+
     /// <summary>
     /// Version of the application.
     /// </summary>
@@ -28,6 +36,9 @@ public class Application
 
     private Application()
     {
+        tagFactory = TagFactory.MakeDefault();
+        parser = new PbnParser(PbnParser.RecoveryMode.Strict, tagFactory);
+        boardManipulator = new PbnBoardManipulator();
     }
     
     /// <summary>
@@ -65,8 +76,7 @@ public class Application
     private void HandleFile(string filename, Options options)
     {
         using var inputFile = new StreamReader(filename);
-        var tagFactory = TagFactory.MakeDefault();
-        var parser = new PbnParser(PbnParser.RecoveryMode.Strict, tagFactory);
+
 
         PbnFile file;
 
@@ -79,19 +89,26 @@ public class Application
             Console.Error.WriteLine($"Error parsing file: {e.Message}");
             return;
         }
-
-        if (options.Debug)
-        {
-            DebugUtils.SerializePbnFile(file, Console.Out);
-            DebugUtils.PrintBoardContextRanges(file, Console.Out);
-            DebugUtils.Playground();
-            return;
-        }
-
+        
         if (options.Info)
         {
             PbnInfoPrinter.PrintOverview(filename, file, Console.Out);
             return;
+        }
+        
+        if (options.DeleteBoards != null)
+        {
+            foreach (var rangeString in options.DeleteBoards)
+            {
+                var range = NumericRange.FromString(rangeString);
+                boardManipulator.RemoveBoards(file, range);
+            }
+        }
+        
+        if (options.Renumber != null)
+        {
+            var renumberOptions = RenumberOptions.Parse(options.Renumber);
+            boardManipulator.RenumberBoards(file, renumberOptions);
         }
 
         if (options.Strip)
@@ -115,6 +132,13 @@ public class Application
             serializer.Serialize(file, filename);
         else
             serializer.Serialize(file, Console.Out);
+        
+        if (options.Debug)
+        {
+            DebugUtils.SerializePbnFile(file, Console.Out);
+            DebugUtils.PrintBoardContextRanges(file, Console.Out);
+            DebugUtils.Playground();
+        }
     }
 }
 
@@ -123,6 +147,8 @@ public class Application
 /// </summary>
 public class Options
 {
+    private const char Separator = ',';
+    
     [Option('h', "help", HelpText = "Produce help message")]
     public bool Help { get; set; }
 
@@ -137,6 +163,12 @@ public class Options
 
     [Option('a', "analyze", HelpText = "Create double dummy analyses for each board")]
     public bool Analyze { get; set; }
+    
+    [Option('r',  "--renumber", HelpText = "Renumber boards, use +/-x to shift numbers, x to assign new numbers")]
+    public string?  Renumber { get; set; }
+    
+    [Option('d',  "--delete-boards", Separator = Separator,HelpText = "Delete boards, accepts numbers or number ranges")]
+    public IEnumerable<string>? DeleteBoards { get; set; } 
 
     [Value(1, MetaName = "output-file",
         HelpText = "Output file name, if not specified, the program will use the input file name")]
