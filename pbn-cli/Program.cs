@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CommandLine;
+using pbn;
 
 namespace pbn_cli;
 
@@ -20,7 +21,7 @@ internal static class Program
         try
         {
             Application.Instance.Run(opts);
-        } catch (Exception e)
+        } catch (PbnError e)
         {
             Console.Error.WriteLine("Error: " + e.Message);
         }

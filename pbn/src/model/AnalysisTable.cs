@@ -16,7 +16,7 @@ public class AnalysisTable
     /// <param name="ddTable">Twodimension array, first index is strain, second is position</param>
     /// <param name="minimaxContract"></param>
     /// <param name="minimaxScore"></param>
-    public AnalysisTable(int[,] ddTable, Contract minimaxContract, int minimaxScore)
+    public AnalysisTable(int[,] ddTable, Contract? minimaxContract, int minimaxScore)
     {
         this.ddTable = ddTable;
         MinimaxContract = minimaxContract;
@@ -24,9 +24,9 @@ public class AnalysisTable
     }
 
     /// <summary>
-    ///     A single contract that maximizes the score.
+    ///     A single contract that maximizes the score. Null if no contract is possible.
     /// </summary>
-    public Contract MinimaxContract { get; }
+    public Contract? MinimaxContract { get; }
 
     /// <summary>
     ///     Best possible score for <see cref="MinimaxContract" />.
@@ -39,7 +39,7 @@ public class AnalysisTable
     /// <remarks>
     ///     The delegate is used during the construction of the table to fill it with values and is not used afterwards.
     /// </remarks>
-    public static AnalysisTable BuildAnalysisTable(Func<Position, Suit, int> ddTable, Contract minimaxContract,
+    public static AnalysisTable BuildAnalysisTable(Func<Position, Suit, int> ddTable, Contract? minimaxContract,
         int minimaxScore)
     {
         var table = new int[5, 4];

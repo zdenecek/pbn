@@ -162,11 +162,13 @@ public static class DdsTypes
         /// <summary>
         ///     Return the par contract for the given dealer.
         /// </summary>
-        public Contract GetParContract(Position dealer)
+        public Contract? GetParContract(Position dealer)
         {
             // NS:NS 4Dx\0...\0EW:NS 4Dx\0...
             var str = dealer.IsNs() ? ParContractsString[..128] : ParContractsString[128..256];
             var contractStr = string.Concat(str.SkipWhile(c => c != ' ').Skip(1).TakeWhile(c => c != '\0'));
+
+            if (contractStr == "") return null;
 
             var declarerLetter = str[3];
 

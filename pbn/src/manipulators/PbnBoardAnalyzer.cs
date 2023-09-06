@@ -130,10 +130,13 @@ public class PbnBoardAnalyzer
     {
         var tokenString = new StringBuilder();
 
-        tokenString.Append(table.MinimaxContract.Level);
-        tokenString.Append(table.MinimaxContract.Suit.ToLetter());
-        tokenString.Append(table.MinimaxContract.Declarer.ToLetter());
-        tokenString.Append(table.MinimaxScore);
+        if (table.MinimaxContract.HasValue)
+        {
+            tokenString.Append(table.MinimaxContract.Value.Level);
+            tokenString.Append(table.MinimaxContract.Value.Suit.ToLetter());
+            tokenString.Append(table.MinimaxContract.Value.Declarer.ToLetter());
+            tokenString.Append(table.MinimaxScore);
+        }
 
         var minimaxTag = tagFactory.CreateTag("Minimax", tokenString.ToString());
         return minimaxTag;
