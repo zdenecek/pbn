@@ -8,12 +8,13 @@
         <Nullable>enable</Nullable>
         <PublishSingleFile>true</PublishSingleFile>
         <SelfContained>true</SelfContained>
-        
+        <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+        <PublishReadyToRun>true</PublishReadyToRun>
         <Title>pbn</Title>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\pbn\pbn.csproj" />
+      <ProjectReference Include="..\pbn-lib\pbn-lib.csproj" />
     </ItemGroup>
 
     <ItemGroup>

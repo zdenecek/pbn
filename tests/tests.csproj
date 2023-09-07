@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\pbn\pbn.csproj" />
+    <ProjectReference Include="..\pbn-lib\pbn-lib.csproj" />
   </ItemGroup>
 
 </Project>
