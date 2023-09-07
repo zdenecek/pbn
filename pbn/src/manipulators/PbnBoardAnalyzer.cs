@@ -170,7 +170,7 @@ public class PbnBoardAnalyzer
     private void PurgeAnalysesTokens(PbnFile file, AnalysisType type)
     {
         var names = GetAnalysisTagNames(type);
-        var toDelete = file.Tokens.GetAllTagsByNames(names);
+        var toDelete = file.Tokens.GetAllTagsByNames(names).ToList();
 
         foreach (var tag in toDelete) file.DeleteToken(tag);
     }
@@ -181,7 +181,7 @@ public class PbnBoardAnalyzer
     private void PurgeAnalysesTokens(PbnFile file, PbnFile.BoardContext context, AnalysisType type)
     {
         var names = GetAnalysisTagNames(type);
-        var toDelete = context.Tokens.GetAllTagsByNames(names);
+        var toDelete = context.Tokens.GetAllTagsByNames(names).ToList();
 
         foreach (var tag in toDelete) file.DeleteToken(tag);
     }

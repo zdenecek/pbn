@@ -24,6 +24,10 @@ Specify the output pbn file. This option is optional.
 
 If no output file is specified, nor the `-w` flag is used, the program will print the file to stdout.
 
+#### -a, [--analyze]
+
+Add double dummy analyses to the file, calculated using DDS
+
 #### -r, [--renumber] arg
 Renumber boards, use +/-x to shift numbers, x to assign new numbers
 
