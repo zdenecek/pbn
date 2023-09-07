@@ -54,5 +54,25 @@
     "postProcessors": [],
     "keepFileLink": false,
     "disableGitFeatures": false
+  },
+  "pdf": {
+    "content": [
+      {
+        "files": [
+          "api/**.yml",
+          "api/index.md"
+        ]
+      },
+      {
+        "files": [
+          "README.md",
+          "guide.md"
+        ],
+        "src": "../"
+      }
+    ],
+    "wkhtmltopdf": {
+      "additionalArguments": "--enable-local-file-access"
+    }
   }
 }
