@@ -21,7 +21,7 @@ internal static class Program
         try
         {
             Application.Instance.Run(opts);
-        } catch (PbnError e)
+        } catch (Exception e)
         {
             Console.Error.WriteLine("Error: " + e.Message);
         }
