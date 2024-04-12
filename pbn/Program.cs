@@ -11,15 +11,15 @@ internal static class Program
         Parser.Default.ParseArguments<Options>(args)
             .WithParsed(RunOptions)
             .WithNotParsed(HandleParseError);
-            
-        
+
     }
 
     private static void RunOptions(Options opts)
     {
         try
         {
-            Application.Instance.Run(opts);
+            var app = new Application();
+            app.Run(opts);
         } catch (Exception e)
         {
             Console.Error.WriteLine("Error: " + e.Message);

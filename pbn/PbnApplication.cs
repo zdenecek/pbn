@@ -27,25 +27,14 @@ public class Application
     /// </summary>
     public const string Version = "0.1.0";
 
-    static Application()
-    {
-        if (Instance != null)
-            throw new InvalidOperationException("PbnApplication already exists");
-        Instance = new Application();
-    }
 
-    private Application()
+    public Application()
     {
         tagFactory = TagFactory.MakeDefault();
         parser = new PbnParser(PbnParser.RecoveryMode.Strict, tagFactory);
         boardManipulator = new PbnBoardManipulator();
     }
-    
-    /// <summary>
-    /// Singleton instance.
-    /// </summary>
-    public static Application Instance { get; }
-    
+
     /// <summary>
     /// True if the application was started with the verbose flag.
     /// </summary>
@@ -75,13 +64,11 @@ public class Application
 
     private void HandleFile(string filename, Options options)
     {
-        using var inputFile = new StreamReader(filename);
-
-
         PbnFile file;
 
         try
         {
+            using var inputFile = new StreamReader(filename);
             file = parser.Parse(inputFile);
         }
         catch (Exception e)
