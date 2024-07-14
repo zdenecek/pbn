@@ -6,17 +6,17 @@
         <RootNamespace>pbn</RootNamespace>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <PlatformTarget>x64</PlatformTarget>
     </PropertyGroup>
 
     <ItemGroup>
         <Compile Remove="tokens\**" />
         <EmbeddedResource Remove="tokens\**" />
         <None Remove="tokens\**" />
-        <None Update="dds.dll">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <None Update="*.dll">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="*.so">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
-    
-
 </Project>

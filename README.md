@@ -1,13 +1,23 @@
 # PBN
 
-PBN is a command line tool for working with Portable Bridge Notation files.
+PBN is a command line tool for working with [Portable Bridge Notation (`.pbn`) files](https://www.tistis.nl/pbn/).
 
-## Supported functions
+Some of the supported features include:
 
 - parse a file and validate it
 - printing overview information about a file
 - stripping a file of unnecessary parts
 - add analysis to a file
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### Third-Party Libraries
+
+This project uses the [`dds` library](https://github.com/dds-bridge/dds), which is licensed under the Apache License 2.0. For more details, see the [LICENSE-APACHE](LICENSE-APACHE) file included in this repository.
+
+For modifications to the `dds` library, see my [dds fork](https://github.com/zdenecek/dds/) repository.
 
 ## Features plan
 
@@ -26,14 +36,21 @@ Use `--help` flag to see the options.
 
 ## Building
 
-PBN is written in .NET 7 and C#.
+PBN is written in .NET Core 7 and C#.
 
-### Build
-
-To build, run
+To build on Windows x86, you can use the provided prebuild `dds.dll` file.
 
 ```bash
 dotnet build
+```
+
+Otherwise, you need to compile `dds` from sources. Luckily, this project provides a CMake build script to make it simple for you.
+
+```bash
+mkdir build
+cd build
+cmake ..
+make
 ```
 
 ## Documentation

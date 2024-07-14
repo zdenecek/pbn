@@ -20,9 +20,24 @@ internal static class Program
         {
             var app = new Application();
             app.Run(opts);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
+#if DEBUG
+                Console.Error.WriteLine("Error: " + e.Message);
+                Console.Error.WriteLine("Stack Trace: " + e.StackTrace);
+
+                if (e.InnerException != null)
+                {
+                    Console.Error.WriteLine("Inner Exception: " + e.InnerException.Message);
+                    Console.Error.WriteLine("Inner Stack Trace: " + e.InnerException.StackTrace);
+                }
+
+                // Rethrow the exception to preserve the original stack trace
+                throw;
+#else
             Console.Error.WriteLine("Error: " + e.Message);
+#endif
         }
     }
 
