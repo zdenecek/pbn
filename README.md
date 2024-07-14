@@ -50,8 +50,12 @@ Otherwise, you need to compile `dds` from sources. Luckily, this project provide
 mkdir build
 cd build
 cmake ..
-make
+make DotnetPublish
 ```
+
+The executable will be in the `publish` directory.
+
+Should you run into any issues, good luck in CMake hell.
 
 ## Documentation
 
