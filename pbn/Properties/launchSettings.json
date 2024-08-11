@@ -2,7 +2,10 @@
   "profiles": {
     "pbn-cli": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\zdnek\\src\\pbncs\\pbn_files\\nocontractcanbemade.pbn -a"
+      "commandLineArgs": "$(SolutionDir)pbn_files/nocontractcanbemade.pbn -a",
+      "environmentVariables": {
+        "DDS_LIB_PATH": "$(SolutionDir)build/dds/"
+      }
     }
   }
 }

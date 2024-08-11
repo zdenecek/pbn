@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.14)
 project(pbn)
 
+if(POLICY CMP0144)
+    cmake_policy(SET CMP0144 NEW)
+endif()
+
 # Set the default build type if not specified
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -20,7 +24,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 endif()
 
 # Find Boost
-find_package(Boost 1.56 REQUIRED COMPONENTS thread)
+find_package(Boost 1.56 REQUIRED COMPONENTS thread CONFIG)
 
 if(Boost_FOUND)
     set(CC_BOOST ${BOOST_ROOT})
@@ -85,6 +89,7 @@ add_custom_target(
   CopyDotnetProject ALL
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/pbn" "${CMAKE_BINARY_DIR}/pbn"
   COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/pbn-lib" "${CMAKE_BINARY_DIR}/pbn-lib"
+  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_SOURCE_DIR}/pbn.sln" "${CMAKE_BINARY_DIR}/pbn.sln"
   COMMENT "Copying .NET project to build directory"
 )
 

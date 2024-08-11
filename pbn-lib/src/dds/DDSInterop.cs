@@ -12,47 +12,52 @@ public static class DdsInterop
     static DdsInterop()
     {
 
-            string dllFileName;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        string dllFileName;
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            dllFileName = "dds.dll";
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            dllFileName = "libdds.so";
+        }
+        else
+        {
+            throw new PlatformNotSupportedException("Unsupported platform");
+        }
+
+        var pathsToCheck = new []
+        {
+            Environment.GetEnvironmentVariable("DDS_LIB_PATH"), 
+            AppDomain.CurrentDomain.BaseDirectory
+        };
+        var success = false;
+        string dllPath = "";
+        foreach (var libPath in pathsToCheck)
+        {
+            Console.WriteLine($"Checking path: {libPath}");
+            if (string.IsNullOrEmpty(libPath))
             {
-                dllFileName = "dds.dll";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                dllFileName = "libdds.so";
-            }
-            else
-            {
-                throw new PlatformNotSupportedException("Unsupported platform");
+                continue;
             }
 
-            var pathsToCheck = new string?[] { Environment.GetEnvironmentVariable("DDS_LIB_PATH"), AppDomain.CurrentDomain.BaseDirectory };
-            var success = false;
-            string dllPath = "";
-            foreach (var libPath in pathsToCheck)
+            dllPath = Path.Combine(libPath, dllFileName);
+            if (File.Exists(dllPath))
             {
-                if (string.IsNullOrEmpty(libPath))
-                {
-                    continue;
-                }
-
-                dllPath = Path.Combine(libPath, dllFileName);
-                if (File.Exists(dllPath))
-                {
-                    success = true;
-                    break;
-                }
-            }
-            if (!success && File.Exists(dllFileName))
-            {
-                dllPath = dllFileName;
                 success = true;
+                break;
             }
-             if(!success)
-                {
-                    throw new DllNotFoundException($"Unable to find the DLL: {dllFileName}");
-                }
-            
+        }
+        if (!success && File.Exists(dllFileName))
+        {
+            dllPath = dllFileName;
+            success = true;
+        }
+        if (!success)
+        {
+            throw new DllNotFoundException($"Unable to find the DLL: {dllFileName}");
+        }
+
 
         DllHandle = NativeLibrary.Load(dllPath);
         CalcAllTablesPBNFunction = Marshal.GetDelegateForFunctionPointer<CalcAllTablesPBNDelegate>(NativeLibrary.GetExport(DllHandle, "CalcAllTablesPBN"));
@@ -79,7 +84,7 @@ public static class DdsInterop
 
     private static CalcAllTablesPBNDelegate CalcAllTablesPBNFunction;
 
-     /// <summary>
+    /// <summary>
     ///     Call DDS to calculate double dummy and par results.
     ///     See DDS docs for details.
     /// </summary>
@@ -93,7 +98,7 @@ public static class DdsInterop
         return CalcAllTablesPBNFunction(ref dealsp, mode, trumpFilter, ref resp, ref presp);
     }
 
-         // Delegate and import for SetThreading
+    // Delegate and import for SetThreading
     private delegate int SetThreadingDelegate(int code);
 
     private static SetThreadingDelegate SetThreadingFunction;
@@ -103,13 +108,13 @@ public static class DdsInterop
         return SetThreadingFunction(code);
     }
 
-     // Delegate and import for SetMaxThreads
-        private delegate void SetMaxThreadsDelegate(int userThreads);
+    // Delegate and import for SetMaxThreads
+    private delegate void SetMaxThreadsDelegate(int userThreads);
 
-        private static SetMaxThreadsDelegate SetMaxThreadsFunction;
+    private static SetMaxThreadsDelegate SetMaxThreadsFunction;
 
-        public static void SetMaxThreads(int userThreads)
-        {
-            SetMaxThreadsFunction(userThreads);
-        }
+    public static void SetMaxThreads(int userThreads)
+    {
+        SetMaxThreadsFunction(userThreads);
+    }
 }
