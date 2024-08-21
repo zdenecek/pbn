@@ -8,7 +8,13 @@ internal static class Program
 {
     private static void Main(string[] args)
     {
-        Parser.Default.ParseArguments<Options>(args)
+        var parser = new Parser(with =>
+        {
+            //ignore case for enum values
+            with.CaseInsensitiveEnumValues = true;
+        });
+        
+        parser.ParseArguments<Options>(args)
             .WithParsed(RunOptions)
             .WithNotParsed(HandleParseError);
 

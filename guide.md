@@ -41,6 +41,12 @@ If no output file is specified, nor the `-w` flag is used, the program will prin
 
 Add double dummy analyses to the file, calculated using DDS
 
+#### --analysis-format arg
+Specify the format of the analysis serialization.  
+Accepted values: 
+ - `"ability"` (default) - the analysis is stored in Minimax and Ability tags
+ - `"psbridge"` - the analysis is stored in the [PsBridge](http://www5b.biglobe.ne.jp/~psbridge/) format, e.g. `"%!R 382426599B382426599B"`
+
 ### -r, [--renumber] arg
 Renumber boards, use +/-x to shift numbers, x to assign new numbers
 
