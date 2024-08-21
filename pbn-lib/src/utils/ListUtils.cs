@@ -14,7 +14,7 @@ public static class ListUtils
     ///     Returns all tags that have one of the given names.
     /// </summary>
     public static IEnumerable<Tag> GetAllTagsByNames(this IEnumerable<SemanticPbnToken> tokens,
-        IReadOnlySet<string> names)
+        IEnumerable<string> names)
     {
         return from token in tokens
             where token is Tag

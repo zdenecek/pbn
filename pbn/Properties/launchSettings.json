@@ -6,6 +6,13 @@
       "environmentVariables": {
         "DDS_LIB_PATH": "$(SolutionDir)build/dds/"
       }
+    },
+    "pbn-cli-help": {
+      "commandName": "Project",
+      "commandLineArgs": "-h",
+      "environmentVariables": {
+        "DDS_LIB_PATH": "$(SolutionDir)build/dds/"
+      }
     }
   }
 }

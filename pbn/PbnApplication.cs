@@ -6,6 +6,7 @@ using pbn;
 using pbn.dds;
 using pbn.debug;
 using pbn.manipulators;
+using pbn.manipulators.analysis;
 using pbn.model;
 using pbn.serialization;
 using pbn.tokens;
@@ -17,17 +18,22 @@ namespace pbn_cli;
 /// </summary>
 public class Application
 {
-    private readonly TagFactory tagFactory;
-    private readonly PbnParser parser;
-    private readonly PbnBoardManipulator boardManipulator;
-    
 
     /// <summary>
     /// Version of the application.
     /// </summary>
-    public const string Version = "0.1.0";
+    public const string Version = "0.1.2";
 
+    private readonly TagFactory tagFactory;
+    private readonly PbnParser parser;
+    private readonly PbnBoardManipulator boardManipulator;
 
+    
+    /// <summary>
+    /// True if the application was started with the verbose flag.
+    /// </summary>
+    public bool Verbose { get; set; }
+    
     public Application()
     {
         tagFactory = TagFactory.MakeDefault();
@@ -35,10 +41,6 @@ public class Application
         boardManipulator = new PbnBoardManipulator();
     }
 
-    /// <summary>
-    /// True if the application was started with the verbose flag.
-    /// </summary>
-    public bool Verbose { get; set; }
     
     public void Run(Options options)
     {
@@ -108,7 +110,8 @@ public class Application
         {
             var service = new DdsAnalysisService();
             var analyzer = new PbnBoardAnalyzer(service, tagFactory);
-            analyzer.AddAnalyses(file);
+            var analysisType = options.AnalysisType;
+            analyzer.AddAnalyses(file, analysisType);
         }
 
         var serializer = new PbnSerializer();
@@ -150,6 +153,26 @@ public class Options
 
     [Option('a', "analyze", HelpText = "Create double dummy analyses for each board")]
     public bool Analyze { get; set; }
+
+    public enum AnalysisFormat
+    {
+        Ability ,
+        Table,
+        PsBridge
+    }
+    
+    [Option("analysis-format", HelpText = "The format of the analysis output.\n Accepted options:\n " +
+                                          "'ability' for Ability and Minimax Tags\n" +
+                                          "'psbridge' for PS Bridge analysis")]
+    public AnalysisFormat DdsAnalysisFormat { get; set; } = AnalysisFormat.Ability;
+    
+    public AnalysisSerializationType AnalysisType => DdsAnalysisFormat switch
+    {
+        AnalysisFormat.Ability => AnalysisSerializationType.AbilityAnalysis,
+        AnalysisFormat.Table => AnalysisSerializationType.OptimumResultTableAnalysis,
+        AnalysisFormat.PsBridge => AnalysisSerializationType.PsBridgeAnalysis,
+        _ => throw new ArgumentOutOfRangeException()
+    };
     
     [Option('r',  "--renumber", HelpText = "Renumber boards, use +/-x to shift numbers, x to assign new numbers")]
     public string?  Renumber { get; set; }

@@ -35,7 +35,6 @@ public static class DdsInterop
         string dllPath = "";
         foreach (var libPath in pathsToCheck)
         {
-            Console.WriteLine($"Checking path: {libPath}");
             if (string.IsNullOrEmpty(libPath))
             {
                 continue;
