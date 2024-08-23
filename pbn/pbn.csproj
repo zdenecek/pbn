@@ -11,6 +11,8 @@
         <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
         <PublishReadyToRun>true</PublishReadyToRun>
         <Title>pbn</Title>
+        <Version>0.1.2</Version>
+        <Authors>Zdenek Tomis</Authors>
     </PropertyGroup>
 
     <ItemGroup>

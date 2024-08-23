@@ -161,7 +161,7 @@ public class Options
         PsBridge
     }
     
-    [Option("analysis-format", HelpText = "The format of the analysis output.\n Accepted options:\n " +
+    [Option("analysis-format", HelpText = "The format of the analysis output.\nAccepted options:\n" +
                                           "'ability' for Ability and Minimax Tags\n" +
                                           "'psbridge' for PS Bridge analysis")]
     public AnalysisFormat DdsAnalysisFormat { get; set; } = AnalysisFormat.Ability;
@@ -174,14 +174,14 @@ public class Options
         _ => throw new ArgumentOutOfRangeException()
     };
     
-    [Option('r',  "--renumber", HelpText = "Renumber boards, use +/-x to shift numbers, x to assign new numbers")]
+    [Option('r',  "renumber", HelpText = "Renumber boards, use +/-x to shift numbers, x to assign new numbers")]
     public string?  Renumber { get; set; }
     
-    [Option('d',  "--delete-boards", Separator = Separator,HelpText = "Delete boards, accepts numbers or number ranges")]
+    [Option('d',  "delete-boards", Separator = Separator,HelpText = "Delete boards, accepts numbers or number ranges")]
     public IEnumerable<string>? DeleteBoards { get; set; } 
 
     [Value(1, MetaName = "output-file",
-        HelpText = "Output file name, if not specified, the program will use the input file name")]
+        HelpText = "Output file name, if not specified, the program will use standard output")]
     public string? Output { get; set; }
 
     [Option('w', "overwrite", HelpText = "Overwrite the input file with output")]

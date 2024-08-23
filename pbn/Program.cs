@@ -12,11 +12,12 @@ internal static class Program
         {
             //ignore case for enum values
             with.CaseInsensitiveEnumValues = true;
+            with.AutoHelp = true;
+            with.HelpWriter = Parser.Default.Settings.HelpWriter;
         });
-        
+
         parser.ParseArguments<Options>(args)
-            .WithParsed(RunOptions)
-            .WithNotParsed(HandleParseError);
+            .WithParsed(RunOptions);
 
     }
 
@@ -47,8 +48,4 @@ internal static class Program
         }
     }
 
-    private static void HandleParseError(IEnumerable<Error> errs)
-    {
-        // do nothing
-    }
 }
