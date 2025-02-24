@@ -9,15 +9,22 @@ Some of the supported features include:
 - stripping a file of unnecessary parts
 - add analysis to a file
 
-## License
+## Purpose
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+If bridge is to stay, a lot of new software will be created, it will be necessary.
 
-### Third-Party Libraries
+So far, there is little standardization, most software is proprietary, paid, closed-source.
 
-This project uses the [`dds` library](https://github.com/dds-bridge/dds), which is licensed under the Apache License 2.0. For more details, see the [LICENSE-APACHE](LICENSE-APACHE) file included in this repository.
+This is the first step in making bridge open source tooling, so that noone has to reinvent the wheel. This package is very far apart from
+being perfect or even good, but I hope it will evolve in time to be - good, reliable, adhering to standards, community-driven.
 
-For modifications to the `dds` library, see my [dds fork](https://github.com/zdenecek/dds/) repository.
+My vision for open source bridge:
+
+- pbn tool (this repository)
+- tournament representation, results, including tools build on BridgeMate standard interface (MS Access) and beyond
+- (epic and far) open source tournament directing
+
+Join me, make bridge programs great and free!
 
 ## Features plan
 
@@ -83,6 +90,16 @@ To run the tests, run
 ```bash
 dotnet test
 ```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### Third-Party Libraries
+
+This project uses the [`dds` library](https://github.com/dds-bridge/dds), which is licensed under the Apache License 2.0. For more details, see the [LICENSE-APACHE](LICENSE-APACHE) file included in this repository.
+
+For modifications to the `dds` library, see my [dds fork](https://github.com/zdenecek/dds/) repository.
 
 ## Authors
 
